@@ -1,2 +1,2 @@
 # meal-plan-calc
-My automatic weekly completely meal plan macro calculator using my nutrition labels.
+My automatic weekly complete meal plan macro calculator using my nutrition labels.
