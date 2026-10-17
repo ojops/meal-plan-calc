@@ -1,0 +1,1089 @@
+
+{
+    "chicken": {
+        "category": "protein",
+        "instore_name": "Sainsbury's 320g British Fresh Skinless & Boneless Chicken Breast Fillets",
+        "state": "cooked",
+        "calories": "137",
+        "fat": "1.6",
+        "saturates": "0.25",
+        "carbs": "0.25",
+        "sugars": "0.25",
+        "fibre": "0.25",
+        "protein": "30.6",
+        "salt": "0.14"
+    },
+
+    "beef": {
+        "category": "protein",
+        "instore_name": "Sainsbury's British or Irish Extra Lean Diced Beef 250g",
+        "state": "cooked",
+        "calories": "169",
+        "fat": "5.2",
+        "saturates": "1.8",
+        "carbs": "1.1",
+        "sugars": "0.7",
+        "fibre": "0.6",
+        "protein": "29.1",
+        "salt": "0.21"
+    },
+
+    "salmon": {
+        "category": "protein",
+        "instore_name": "Sainsbury's Skin on ASC Scottish Salmon Fillets x2 240g",
+        "state": "cooked",
+        "calories": "231",
+        "fat": "15.3",
+        "saturates": "2.6",
+        "carbs": "0.25",
+        "sugars": "0.25",
+        "fibre": "0.25",
+        "protein": "23.0",
+        "salt": "0.27"
+    },
+
+    "mackerel": {
+        "category": "protein",
+        "instore_name": "Sainsbury's Mackerel in Springwater 125g",
+        "state": "raw",
+        "calories": "219",
+        "fat": "14.3",
+        "saturates": "3.6",
+        "carbs": "0.25",
+        "sugars": "0.25",
+        "fibre": "0.7",
+        "protein": "22.2",
+        "salt": "0.13"
+    },
+
+
+
+    "rice": {
+        "category": "carb",
+        "instore_name": "Laila Basmati Rice 10kg",
+        "state": "raw",
+        "calories": "375",
+        "fat": "0.5",
+        "saturates": "0.25",
+        "carbs": "84",
+        "sugars": "0.5",
+        "fibre": "0.5",
+        "protein": "8.2",
+        "salt": "0.25"
+    },
+
+    "pasta": {
+        "category": "carb",
+        "instore_name": "Sainsbury's Wholewheat Fusilli Pasta 500g",
+        "state": "cooked",
+        "calories": "178",
+        "fat": "1.2",
+        "saturates": "0.3",
+        "carbs": "33.6",
+        "sugars": "0.9",
+        "fibre": "4.5",
+        "protein": "6.0",
+        "salt": "0.01"
+    },
+
+    "quinoa": {
+        "category": "carb",
+        "instore_name": "Merchant Gourmet Simply Cooked Red & White Quinoa 250g",
+        "state": "raw",
+        "calories": "184",
+        "fat": "3.2",
+        "saturates": "0.25",
+        "carbs": "31",
+        "sugars": "1.2",
+        "fibre": "4",
+        "protein": "5.8",
+        "salt": "0.25"
+    },
+
+    "grains": {
+        "category": "carb",
+        "instore_name": "Merchant Gourmet Simply Cooked Glorious Grains with Red Rice & Quinoa 250g",
+        "state": "raw",
+        "calories": "182",
+        "fat": "2.8",
+        "saturates": "0.5",
+        "carbs": "32",
+        "sugars": "0.7",
+        "fibre": "4",
+        "protein": "5.5",
+        "salt": "0.25"
+    },
+
+    "lentils": {
+        "category": "carb",
+        "instore_name": "Merchant Gourmet Microwave Ready to eat Beluga Lentils 250g",
+        "state": "raw",
+        "calories": "143",
+        "fat": "1.7",
+        "saturates": "0.25",
+        "carbs": "17",
+        "sugars": "0.5",
+        "fibre": "8.1",
+        "protein": "11",
+        "salt": "0.25"
+    },
+
+    "chickpeas": {
+        "category": "carb",
+        "instore_name": "Sainsbury's Chickpeas in Water 400g (240g*)",
+        "state": "raw",
+        "calories": "122",
+        "fat": "1.4",
+        "saturates": "0.2",
+        "carbs": "16.5",
+        "sugars": "0.25",
+        "fibre": "6.1",
+        "protein": "7.7",
+        "salt": "0.03" 
+    },
+
+    "sweet_potato": {
+        "category": "carb",
+        "instore_name": "Sainsbury's Sweet Potatoes Loose",
+        "state": "cooked",
+        "calories": "86",
+        "fat": "0.25",
+        "saturates": "0.2",
+        "carbs": "17.2",
+        "sugars": "13.7",
+        "fibre": "2.5",
+        "protein": "2",
+        "salt": "0.05"
+    },
+
+    "potato": {
+        "category": "carb",
+        "instore_name": "Sainsbury's Baking Potatoes (Loose)",
+        "state": "cooked",
+        "calories": "107",
+        "fat": "0.25",
+        "saturates": "0.05",
+        "carbs": "22.6",
+        "sugars": "1.4",
+        "fibre": "2.6",
+        "protein": "2.5",
+        "salt": "0.005"
+    },
+
+    "vegetable_medley": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Vegetable Medley 1kg",
+        "state": "cooked",
+        "calories": "67",
+        "fat": "0.8",
+        "saturates": "0.2",
+        "carbs": "8.9",
+        "sugars": "3.1",
+        "fibre": "5.7",
+        "protein": "3.1",
+        "salt": "0.03"
+    },
+
+    "spinach": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Chopped Spinach 900g",
+        "state": "cooked",
+        "calories": "27",
+        "fat": "0.8",
+        "saturates": "0.05",
+        "carbs": "0.25",
+        "sugars": "0.25",
+        "fibre": "2.8",
+        "protein": "3.1",
+        "salt": "0.04"
+    },
+
+    "broccoli": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Broccoli Florets 900g",
+        "state": "cooked",
+        "calories": "35",
+        "fat": "0.25",
+        "saturates": "0.05",
+        "carbs": "2.8",
+        "sugars": "1.6",
+        "fibre": "2.8",
+        "protein": "3.3",
+        "salt": "0.02"
+    },
+
+    "cauliflower": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Cauliflower Florets 900g",
+        "state": "cooked",
+        "calories": "34",
+        "fat": "0.9",
+        "saturates": "0.2",
+        "carbs": "3.5",
+        "sugars": "2.4",
+        "fibre": "1.9",
+        "protein": "1.9",
+        "salt": "0.02"
+    },
+
+    "green_beans": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Whole Green Beans 900g",
+        "state": "cooked",
+        "calories": "34",
+        "fat": "0.25",
+        "saturates": "0.05",
+        "carbs": "3.8",
+        "sugars": "2.9",
+        "fibre": "4.1",
+        "protein": "2.1",
+        "salt": "0.005"
+    },
+
+    "brussels_sprouts": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Button Sprouts 1kg",
+        "state": "cooked",
+        "calories": "39",
+        "fat": "0.25",
+        "saturates": "0.05",
+        "carbs": "4.2",
+        "sugars": "3.7",
+        "fibre": "3.2",
+        "protein": "3.1",
+        "salt": "0.005"
+    },
+
+    "onion": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Chopped Onions 500g",
+        "state": "cooked",
+        "calories": "58",
+        "fat": "0.9",
+        "saturates": "0.05",
+        "carbs": "10.2",
+        "sugars": "7.6",
+        "fibre": "2.4",
+        "protein": "1.1",
+        "salt": "0.005"
+    },
+
+    "garlic": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Inspired to Cook Chopped Garlic 75g",
+        "state": "raw",
+        "calories": "110",
+        "fat": "0.6",
+        "saturates": "0.05",
+        "carbs": "16.3",
+        "sugars": "1.6",
+        "fibre": "4.1",
+        "protein": "7.9",
+        "salt": "0.005"
+    },
+
+    "ginger": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Chopped Ginger 75g",
+        "state": "raw",
+        "calories": "51",
+        "fat": "0.8",
+        "saturates": "0.2",
+        "carbs": "8.1",
+        "sugars": "1.7",
+        "fibre": "2.0",
+        "protein": "1.8",
+        "salt": "0.03"
+    },
+
+    "blueberries": {
+        "category": "fruit",
+        "instore_name": "Sainsbury's 360g Frozen Blueberries",
+        "state": "raw",
+        "calories": "45",
+        "fat": "0.25",
+        "saturates": "0.05",
+        "carbs": "9.1",
+        "sugars": "9.1",
+        "fibre": "1.5",
+        "protein": "0.9",
+        "salt": "0.005"
+    },
+
+    "red_cabbage": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Red Cabbage Each",
+        "state": "raw",
+        "calories": "28",
+        "fat": "0.25",
+        "saturates": "0.05",
+        "carbs": "4.6",
+        "sugars": "4.6",
+        "fibre": "2.0",
+        "protein": "1.2",
+        "salt": "0.02"
+    },
+
+    "courgette": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Courgettes Loose",
+        "state": "cooked",
+        "calories": "22",
+        "fat": "0.25",
+        "saturates": "0.05",
+        "carbs": "2.0",
+        "sugars": "1.9",
+        "fibre": "1.2",
+        "protein": "2.0",
+        "salt": "0.005"
+    },
+
+    "mushroom": {
+        "category": "veg",
+        "instore_name": "Sainsbury's 300g Closed Cup Chestnut Mushrooms",
+        "state": "raw",
+        "calories": "8",
+        "fat": "0.25",
+        "saturates": "0.05",
+        "carbs": "0.25",
+        "sugars": "0.25",
+        "fibre": "0.7",
+        "protein": "1",
+        "salt": "0.005"
+    },
+
+    "red_pepper": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Red Pepper",
+        "state": "raw",
+        "calories": "23",
+        "fat": "0.25",
+        "saturates": "0.05",
+        "carbs": "4.1",
+        "sugars": "4.0",
+        "fibre": "1.0",
+        "protein": "0.8",
+        "salt": "0.03"
+    },
+
+    "beetroot": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Beetroot Vacuum Pack 250g",
+        "state": "raw",
+        "calories": "42",
+        "fat": "0.25",
+        "saturates": "0.2",
+        "carbs": "7.2",
+        "sugars": "7.1",
+        "fibre": "2.2",
+        "protein": "1.4",
+        "salt": "0.18"
+    },
+
+    "spring_onion": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Spring Onions Bunch 100g",
+        "state": "raw",
+        "calories": "27",
+        "fat": "0.25",
+        "saturates": "0.05",
+        "carbs": "2.9",
+        "sugars": "2.7",
+        "fibre": "1.5",
+        "protein": "2.0",
+        "salt": "0.02"
+    },
+
+    "oats": {
+        "category": "carb",
+        "instore_name": "Quaker Jumbo Porridge Oats 1kg",
+        "state": "raw",
+        "calories": "374",
+        "fat": "8",
+        "saturates": "1.5",
+        "carbs": "60",
+        "sugars": "1.1",
+        "fibre": "9",
+        "protein": "11",
+        "salt": "0.05"
+    },
+
+    "milk": {
+        "category": "dairy",
+        "instore_name": "Alpro 1L Soya No Sugar Chilled Dairy Free Drink",
+        "state": "raw",
+        "calories": "33",
+        "fat": "1.8",
+        "saturates": "0.25",
+        "carbs": "0.05",
+        "sugars": "0.05",
+        "fibre": "0.6",
+        "protein": "3.3",
+        "salt": "0.25"
+    },
+
+    "yoghurt": {
+        "category": "dairy",
+        "instore_name": "Alpro Plain No Sugars Soya Dairy Free Yoghurt Alternative 500g",
+        "state": "raw",
+        "calories": "42",
+        "fat": "2.3",
+        "saturates": "0.25",
+        "carbs": "0.05",
+        "sugars": "0.05",
+        "fibre": "0.9",
+        "protein": "4",
+        "salt": "0.25"
+    },
+
+    "kefir": {
+        "category": "dairy",
+        "instore_name": "Bio & Me Kefir Live Yoghurt Original 350g",
+        "state": "raw",
+        "calories": "79",
+        "fat": "3",
+        "saturates": "2.6",
+        "carbs": "7",
+        "sugars": "7",
+        "fibre": "2",
+        "protein": "5",
+        "salt": "0.25"
+    },
+
+    "cinnamon": {
+        "category": "extra",
+        "instore_name": "Ceylon Cinnamon Powder (True)",
+        "link": "https://www.buywholefoodsonline.co.uk/ceylon-cinnamon-powder-true.html",
+        "state": "raw",
+        "calories": "247",
+        "fat": "1.24",
+        "saturates": "0.35",
+        "carbs": "80.59",
+        "sugars": "2.17",
+        "fibre": "53.1",
+        "protein": "3.99",
+        "salt": "0.03"
+    },
+    
+    "cocao_powder": {
+        "category": "extra",
+        "instore_name": "Raw Cacao Powder",
+        "link": "https://www.buywholefoodsonline.co.uk/raw-cacao-powder.html",
+        "state": "raw",
+        "calories": "317",
+        "fat": "10.5",
+        "saturates": "6.4",
+        "carbs": "11.2",
+        "sugars": "1",
+        "fibre": "36.4",
+        "protein": "23.8",
+        "salt": "0.03"
+    },
+
+    "egg": {
+        "category": "dairy",
+        "instore_name": "St. Ewe Original Large Free Range Eggs Pack x10",
+        "state": "raw",
+        "calories": "131",
+        "fat": "9",
+        "saturates": "2.5",
+        "carbs": "0.05",
+        "sugars": "0.05",
+        "fibre": "0.05",
+        "protein": "12.6",
+        "salt": "0.25"
+    },
+
+    "almonds": {
+        "category": "nut",
+        "instore_name": "Sainsbury's Whole Almonds 300g",
+        "state": "raw",
+        "calories": "604",
+        "fat": "51.2",
+        "saturates": "4",
+        "carbs": "9.2",
+        "sugars": "3",
+        "fibre": "10.8",
+        "protein": "21.4",
+        "salt": "0.005"
+    },
+
+    "brazil_nuts": {
+        "category": "nut",
+        "instore_name": "Sainsbury's Brazil Nuts 200g",
+        "state": "raw",
+        "calories": "700",
+        "fat": "67.4",
+        "saturates": "17.3",
+        "carbs": "1.9",
+        "sugars": "1.9",
+        "fibre": "9.2",
+        "protein": "16.8",
+        "salt": "0.04"
+    },
+
+    "mixed_seeds": {
+        "category": "nut",
+        "instore_name": "Sainsbury's Seed Mix 100g",
+        "state": "raw",
+        "calories": "614",
+        "fat": "53",
+        "saturates": "7.5",
+        "carbs": "2.3",
+        "sugars": "2.2",
+        "fibre": "10.3",
+        "protein": "26.7",
+        "salt": "0.12"
+    },
+
+    "linseed": {
+        "category": "nut",
+        "instore_name": "Organic Ground Linseed",
+        "link": "https://www.buywholefoodsonline.co.uk/organic-ground-linseed-500g.html",
+        "state": "raw",
+        "calories": "477",
+        "fat": "31",
+        "saturates": "2.9",
+        "carbs": "13",
+        "sugars": "1.5",
+        "fibre": "34.8",
+        "protein": "19",
+        "salt": "0.05"
+    },
+
+    "chia_seeds": {
+        "category": "nut",
+        "instore_name": "Organic Chia Seeds",
+        "link": "https://www.buywholefoodsonline.co.uk/organic-chia-seeds.html",
+        "state": "raw",
+        "calories": "486",
+        "fat": "30.7",
+        "saturates": "3.3",
+        "carbs": "7.7",
+        "sugars": "0.5",
+        "fibre": "34.4",
+        "protein": "16.7",
+        "salt": "0.04"
+    },
+
+    "banana": {
+        "category": "fruit",
+        "instore_name": "Sainsbury's Bananas Loose",
+        "state": "raw",
+        "calories": "85",
+        "fat": "0.25",
+        "saturates": "0.05",
+        "carbs": "19.3",
+        "sugars": "18.1",
+        "fibre": "1.4",
+        "protein": "1.1",
+        "salt": "0.005"
+    },
+
+    "apple": {
+        "category": "fruit",
+        "instore_name": "Sainsbury's Apples 1kg",
+        "state": "raw",
+        "calories": "54",
+        "fat": "0.25",
+        "saturates": "0.05",
+        "carbs": "11.1",
+        "sugars": "11.1",
+        "fibre": "1.2",
+        "protein": "0.6",
+        "salt": "0.005"
+    },
+
+    "orange": {
+        "category": "fruit",
+        "instore_name": "Sainsbury's Oranges",
+        "state": "raw",
+        "calories": "40",
+        "fat": "0.25",
+        "saturates": "0.05",
+        "carbs": "8.2",
+        "sugars": "8.2",
+        "fibre": "1.2",
+        "protein": "0.8",
+        "salt": "0.005"
+    },
+
+    "kiwi": {
+        "category": "fruit",
+        "instore_name": "Sainsbury's Large Kiwi Fruit Single",
+        "state": "raw",
+        "calories": "53",
+        "fat": "0.25",
+        "saturates": "0.05",
+        "carbs": "10.1",
+        "sugars": "9.8",
+        "fibre": "1.9",
+        "protein": "1.1",
+        "salt": "0.005"
+    },
+
+    "lemon": {
+        "category": "fruit",
+        "instore_name": "Sainsbury's Lemons",
+        "state": "raw",
+        "calories": "20",
+        "fat": "0.25",
+        "saturates": "0.05",
+        "carbs": "3.2",
+        "sugars": "3",
+        "fibre": "0.05",
+        "protein": "1",
+        "salt": "0.005"
+    },
+
+    "lime": {
+        "category": "fruit",
+        "instore_name": "Sainsbury's Limes",
+        "state": "raw",
+        "calories": "20",
+        "fat": "0.25",
+        "saturates": "0.05",
+        "carbs": "3.2",
+        "sugars": "3.2",
+        "fibre": "0.25",
+        "protein": "1",
+        "salt": "0.005"
+    },
+
+    "extra_virgin_olive_oil": {
+        "comment": "all oil very similar nutrients",
+        "category": "extra",
+        "instore_name": "Odysea Greek Early Harvest Extra Virgin Olive Oil 500ml",
+        "state": "raw",
+        "calories": "824",
+        "fat": "91.6",
+        "saturates": "15.9",
+        "carbs": "0.05",
+        "sugars": "0.05",
+        "fibre": "0.05",
+        "protein": "0.05",
+        "salt": "0.05"
+    },
+
+    "olive_oil": {
+        "category": "extra",
+        "instore_name": "Sainsbury's Olive Oil 1L",
+        "state": "raw",
+        "calories": "823",
+        "fat": "91.4",
+        "saturates": "15.4",
+        "carbs": "0.25",
+        "sugars": "0.25",
+        "fibre": "0.25",
+        "protein": "0.25",
+        "salt": "0.005"
+    },
+
+    "iodised_salt": {
+        "category": "extra",
+        "instore_name": "Cerebos Iodised Salt 400g",
+        "state": "raw",
+        "calories": "0.05",
+        "fat": "0.05",
+        "saturates": "0.05",
+        "carbs": "0.05",
+        "sugars": "0.05",
+        "fibre": "0.05",
+        "protein": "0.05",
+        "salt": "99.9"
+    },
+
+    "black_pepper": {
+        "category": "extra",
+        "instore_name": "Sainsbury's Black Peppercorns 275g",
+        "state": "raw",
+        "calories": "277",
+        "fat": "3.3",
+        "saturates": "1.4",
+        "carbs": "38.7",
+        "sugars": "0.6",
+        "fibre": "25.3",
+        "protein": "10.4",
+        "salt": "1.5"
+    },
+
+    
+    "seaweed": {
+        "comment": "1 sheet is 2.2g",
+        "category": "veg",
+        "instore_name": "Yutaka Sushi Nori Roasted Seaweed Sheets x5 11g",
+        "state": "raw",
+        "calories": "337",
+        "fat": "3.3",
+        "saturates": "1.3",
+        "carbs": "40",
+        "sugars": "0.05",
+        "fibre": "7.7",
+        "protein": "41",
+        "salt": "1.8"
+    },
+    
+    "sauerkraut": {
+        "category": "veg",
+        "instore_name": "Vadasz Garlic & Dill Sauerkraut 400g",
+        "state": "raw",
+        "calories": "20",
+        "fat": "0.5",
+        "saturates": "0.25",
+        "carbs": "2",
+        "sugars": "0.7",
+        "fibre": "2.4",
+        "protein": "1.2",
+        "salt": "1.5"
+    },
+    
+    "kimchi": {
+        "category": "veg",
+        "instore_name": "Vadasz Super Beet Kimchi 400g",
+        "state": "raw",
+        "calories": "22",
+        "fat": "0.25",
+        "saturates": "0.25",
+        "carbs": "1.7",
+        "sugars": "0.25",
+        "fibre": "4",
+        "protein": "1",
+        "salt": "2.4"
+    },
+    
+    "passata": {
+        "category": "veg",
+        "instore_name": "Loyd Grossman Pasta Sauce, Tomato & Basil 350g",
+        "state": "raw",
+        "calories": "62",
+        "fat": "2.6",
+        "saturates": "0.25",
+        "carbs": "7.8",
+        "sugars": "6",
+        "fibre": "0.8",
+        "protein": "1.5",
+        "salt": "0.8"
+    },
+    
+    "turmeric": {
+        "category": "extra",
+        "instore_name": "Organic Turmeric Powder - Double Strength",
+        "link": "https://www.buywholefoodsonline.co.uk/organic-turmeric-powder-double-strength.html",
+        "state": "raw",
+        "calories": "312",
+        "fat": "3.25",
+        "saturates": "1.84",
+        "carbs": "67.14",
+        "sugars": "3.21",
+        "fibre": "22.7",
+        "protein": "9.68",
+        "salt": "0.07"
+    },
+
+    "oregano": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Oregano 12g",
+        "state": "raw",
+        "calories": "308",
+        "fat": "10.3",
+        "saturates": "2.7",
+        "carbs": "21.6",
+        "sugars": "4.1",
+        "fibre": "0",
+        "protein": "11",
+        "salt": "0.04"
+    },
+
+    "dill": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Bunched Dill 20g",
+        "state": "raw",
+        "calories": "56",
+        "fat": "1.1",
+        "saturates": "0.05",
+        "carbs": "7",
+        "sugars": "0.25",
+        "fibre": "2.1",
+        "protein": "3.5",
+        "salt": "0.15"
+    },
+
+    "paprika": {
+        "category": "extra",
+        "instore_name": "Sainsbury's Paprika 44g",
+        "state": "raw",
+        "calories": "324",
+        "fat": "13",
+        "saturates": "2.1",
+        "carbs": "18.3",
+        "sugars": "10.3",
+        "fibre": "0",
+        "protein": "14.8",
+        "salt": "0.09"
+    },
+
+    "smoked_paprika": {
+        "category": "extra",
+        "instore_name": "Sainsbury's Smoked Paprika 44g",
+        "state": "raw",
+        "calories": "324",
+        "fat": "13",
+        "saturates": "2.1",
+        "carbs": "18.3",
+        "sugars": "10.3",
+        "fibre": "0",
+        "protein": "14.8",
+        "salt": "0.09"
+    }, 
+
+    "ground_cumin": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Ground Cumin 43g",
+        "state": "raw",
+        "calories": "428",
+        "fat": "22.3",
+        "saturates": "1.5",
+        "carbs": "33.8",
+        "sugars": "2.3",
+        "fibre": "0",
+        "protein": "17.8",
+        "salt": "0.42"
+    },
+
+    "ground_coriander": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Ground Coriander 36g",
+        "state": "raw",
+        "calories": "346",
+        "fat": "17.8",
+        "saturates": "1",
+        "carbs": "13.1",
+        "sugars": "0.25",
+        "fibre": "0",
+        "protein": "12.4",
+        "salt": "0.09"
+    },
+
+    "garam_masala": {
+        "category": "extra",
+        "instore_name": "Sainsbury's Garam Masala 38g",
+        "state": "raw",
+        "calories": "335",
+        "fat": "13.8",
+        "saturates": "0.9",
+        "carbs": "20",
+        "sugars": "1.3",
+        "fibre": "38.2",
+        "protein": "13.7",
+        "salt": "0.29"
+    },
+
+    "thyme": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Thyme 12g",
+        "state": "raw",
+        "calories": "287",
+        "fat": "7.7",
+        "saturates": "2.7",
+        "carbs": "26.9",
+        "sugars": "1.7",
+        "fibre": "0",
+        "protein": "9.1",
+        "salt": "0.14"
+    },
+
+    "rosemary": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Rosemary 22g",
+        "state": "raw",
+        "calories": "328",
+        "fat": "15.2",
+        "saturates": "7.4",
+        "carbs": "21.5",
+        "sugars": "7.3",
+        "fibre": "0",
+        "protein": "4.9",
+        "salt": "0.13"
+    },
+
+    "basil": {
+        "category": "veg",
+        "instore_name": "Sainsbury's Basil 15g",
+        "state": "raw",
+        "calories": "246",
+        "fat": "4.1",
+        "saturates": "2.2",
+        "carbs": "10.5",
+        "sugars": "1.7",
+        "fibre": "0",
+        "protein": "23",
+        "salt": "0.19"
+    },
+
+    "balsamic_vinegar": {
+        "category": "extra",
+        "instore_name": "Sainsbury's Organic Balsamic Vinegar of Modena 250ml",
+        "state": "raw",
+        "calories": "141",
+        "fat": "0.25",
+        "saturates": "0.05",
+        "carbs": "34.4",
+        "sugars": "28",
+        "fibre": "0.25",
+        "protein": "0.25",
+        "salt": "0.11"
+    },
+
+    "rice_vinegar": {
+        "category": "extra",
+        "instore_name": "Sainsbury's Rice Vinegar, Inspired to Cook 150ml",
+        "state": "raw",
+        "calories": "12",
+        "fat": "0.25",
+        "saturates": "0",
+        "carbs": "2.6",
+        "sugars": "0.25",
+        "fibre": "0.25",
+        "protein": "0.25",
+        "salt": "0.02"
+    },
+
+    "vitamin_d3_and_k2":{
+        "comment": "2000IU-100mcg",
+        "category": "supplement",
+        "instore_name": "Oxford Vitality: Vitamin D3 + K2 MK7 Tablets",
+        "link": "https://oxfordvitality.co.uk/products/vitamin-d3-4000iu-and-k2-mk7-100mcg-tablets",
+        "state": "raw",
+        "calories": "0",
+        "fat": "0",
+        "saturates": "0",
+        "carbs": "0",
+        "sugars": "0",
+        "fibre": "0",
+        "protein": "0",
+        "salt": "0"
+    },
+
+    "zinc":{
+        "category": "supplement",
+        "instore_name": "Oxford Vitality: Zinc Tablets",
+        "link": "https://oxfordvitality.co.uk/products/zinc-tablets",
+        "state": "raw",
+        "calories": "0",
+        "fat": "0",
+        "saturates": "0",
+        "carbs": "0",
+        "sugars": "0",
+        "fibre": "0",
+        "protein": "0",
+        "salt": "0"
+    },
+
+    "omega_3":{
+        "category": "supplement",
+        "instore_name": "Nutrition Geeks: Omega 3",
+        "link": "https://www.nutritiongeeks.co/products/omega-3",
+        "state": "raw",
+        "calories": "0",
+        "fat": "0",
+        "saturates": "0",
+        "carbs": "0",
+        "sugars": "0",
+        "fibre": "0",
+        "protein": "0",
+        "salt": "0"
+    },
+
+    "magnesium_glycinate":{
+        "category": "supplement",
+        "instore_name": "Nutrition Geeks: Magnesium Glycinate 3-in-1",
+        "link": "https://www.nutritiongeeks.co/products/magnesium-glycinate-3-in-1",
+        "state": "raw",
+        "calories": "0",
+        "fat": "0",
+        "saturates": "0",
+        "carbs": "0",
+        "sugars": "0",
+        "fibre": "0",
+        "protein": "0",
+        "salt": "0"
+    },
+
+    "electrolytes_powder":{
+        "comment": "any flavour good nutrition, nutrition is estimate",
+        "category": "supplement",
+        "instore_name": "Optimum Nutrition: Electrolyte Powder",
+        "link": "https://www.optimumnutrition.com/en-gb/products/electrolyte-powder",
+        "state": "raw",
+        "calories": "100",
+        "fat": "0",
+        "saturates": "0",
+        "carbs": "10",
+        "sugars": "0",
+        "fibre": "3",
+        "protein": "0",
+        "salt": "13"
+    },
+
+    "electrolytes_tablet":{
+        "comment": "any flavour good nutrition",
+        "category": "supplement",
+        "instore_name": "Science in Sport: Hydro Tablets",
+        "link": "https://www.scienceinsport.com/shop-sis/go-range/go-hydro-tablets/sis-hydro-tablets-pack",
+        "state": "raw",
+        "calories": "194",
+        "fat": "0",
+        "saturates": "0",
+        "carbs": "18",
+        "sugars": "1",
+        "fibre": "4.6",
+        "protein": "0.1",
+        "salt": "19.2"
+    },
+
+    "collagen":{
+        "category": "supplement",
+        "instore_name": "Bulk: Collagen & Vitamin C - Unflavoured",
+        "link": "https://www.bulk.com/uk/products/collagen-vitamin-c/bpb-coll-vitc",
+        "state": "raw",
+        "calories": "356",
+        "fat": "0",
+        "saturates": "0",
+        "carbs": "5.8",
+        "sugars": "0",
+        "fibre": "2.5",
+        "protein": "82",
+        "salt": "1.46"
+    },
+
+    "whey_isolate":{
+        "category": "supplement",
+        "instore_name": "Bulk: Pure Whey Isolate - Unflavoured",
+        "link": "https://www.bulk.com/uk/products/pure-whey-isolate-90/bpb-wpi9-0000",
+        "state": "raw",
+        "calories": "365",
+        "fat": "0.6",
+        "saturates": "0",
+        "carbs": "5",
+        "sugars": "1.4",
+        "fibre": "2",
+        "protein": "84",
+        "salt": "0.5"
+    },
+
+    "creatine_monohydrate":{
+        "comment": "this is correct nutrition",
+        "category": "supplement",
+        "instore_name": "Bulk: Creatine Monohydrate Powder - Unflavoured",
+        "link": "https://www.bulk.com/uk/products/creatine-monohydrate/bpb-cmon-0000",
+        "state": "raw",
+        "calories": "0",
+        "fat": "0",
+        "saturates": "0",
+        "carbs": "0",
+        "sugars": "0",
+        "fibre": "0",
+        "protein": "0",
+        "salt": "0"
+    }
+}

@@ -1,0 +1,209 @@
+{
+    "comments": {
+        "general": "these aren't accounted for in code:",
+        "electrolytes_powder": "only if realy sweaty"
+    },
+
+    "snack": {
+        "apple": "80",
+        "orange": "80",
+        "milk": "300",
+        "yoghurt": "69",
+        "banana": "80",
+        "almonds": "5",
+        "brazil_nuts": "10"
+    },
+
+    "supplements": {
+        "vitamin_d3_and_k2": "1",
+        "zinc": "1",
+        "omega_3": "1",
+        "magnesium_glycinate": "1"
+    },
+    
+    "run": {
+        "electrolytes_tablet": "10",
+        "collagen": "20",
+        "kiwi": "70",
+        "electrolytes_powder": "6",
+        "milk": "200",
+        "kefir": "95",
+        "egg": "70"
+    },
+
+    "strength": {
+        "collagen": "20",
+        "kiwi": "70",
+        "milk": "200",
+        "kefir": "95",
+        "egg": "70"
+    },
+
+    "mobility": {
+        "milk": "200",
+        "kefir": "95",
+        "egg": "70"
+    },
+
+    "breakfast":{
+        "oats": "75",
+        "mixed_seeds": "5",
+        "cinnamon": "1.3",
+        "cocao_powder": "5",
+        "banana": "80",
+        "creatine_monohydrate": "5",
+        "linseed": "6",
+        "chia_seeds": "10",
+        "blueberries": "80",
+        "milk": "280"
+    },
+
+    "monday": {
+        "chicken": "40",
+        "rice": "161",
+        "vegetable_medley": "300", 
+        "spinach": "80",
+        "broccoli": "60",
+        "garlic": "1.5",
+        "ginger": "4.5",
+        "oregano": "1.5",
+        "paprika": "2",
+        "turmeric": "2",
+        "chickpeas": "120",
+        "quinoa": "50",
+        "spring_onion": "15",
+        "seaweed": "4.4",
+        "dill": "9",
+        "sauerkraut": "27",
+        "extra_virgin_olive_oil": "9",
+        "lemon": "30",
+        "black_pepper": "0.5"
+    },
+
+    "tuesday": {
+        "beef": "120",
+        "pasta": "120",
+        "spinach": "150",
+        "red_cabbage": "80",
+        "mushroom": "80",
+        "courgette": "80",
+        "onion": "25",
+        "garlic": "1.5",
+        "ginger": "7",
+        "oregano": "0.5",
+        "ground_cumin": "1.5",
+        "smoked_paprika": "2",
+        "ground_coriander": "1",
+        "turmeric": "2",
+        "seaweed": "3.3",
+        "kimchi": "27",
+        "passata": "260",
+        "lime": "27",
+        "black_pepper": "0.5"
+    },
+
+    "wednesday": {
+        "chicken": "58",
+        "rice": "110",
+        "sweet_potato": "370",
+        "vegetable_medley": "250",
+        "spinach": "150",
+        "garlic": "1.5",
+        "ginger": "4.5",
+        "ground_cumin": "1.5",
+        "ground_coriander": "1.5",
+        "turmeric": "2",       
+        "garam_masala": "3",
+        "chickpeas": "60",
+        "spring_onion": "15",
+        "seaweed": "3.3",
+        "sauerkraut": "27",
+        "beetroot": "100",
+        "extra_virgin_olive_oil": "12",
+        "lemon": "27",
+        "black_pepper": "0.5"
+    },
+
+    "thursday": {
+        "beef": "125",
+        "rosemary": "1",
+        "potato": "200",
+        "green_beans": "140",
+        "mushroom": "150",
+        "onion": "40",
+        "red_pepper": "80",
+        "garlic": "2.5",
+        "ginger": "7",
+        "paprika": "1.5",
+        "thyme": "1",
+        "turmeric": "2",
+        "lentils": "140",
+        "seaweed": "2.2",
+        "kimchi": "27",
+        "extra_virgin_olive_oil": "15",
+        "lemon": "24",
+        "black_pepper": "0.5"
+    },
+    "friday": {
+        "chicken": "65",
+        "rice": "105",
+        "courgette": "200",
+        "red_pepper": "150",
+        "red_cabbage": "100",
+        "mushroom": "55",
+        "garlic": "1.5",
+        "ginger": "4.5",
+        "oregano": "1",
+        "paprika": "1.5",
+        "turmeric": "2",
+        "basil": "1.5",
+        "quinoa": "150",
+        "grains": "125",
+        "seaweed": "1.1",
+        "extra_virgin_olive_oil": "6",
+        "lemon": "24",
+        "balsamic_vinegar": "9",
+        "black_pepper": "0.5"
+    },
+
+    "saturday": {
+        "mackerel": "75",
+        "rice": "171",
+        "broccoli": "200",
+        "cauliflower": "150",
+        "garlic": "1",
+        "ginger": "6",
+        "turmeric": "2",
+        "chickpeas": "105",
+        "lentils": "100",
+        "sauerkraut": "27",
+        "beetroot": "100",
+        "extra_virgin_olive_oil": "4",
+        "lime": "24",
+        "rice_vinegar": "15",
+        "black_pepper": "0.5"
+    },
+
+    "sunday": {
+        "salmon": "148",
+        "rice": "66",
+        "broccoli": "250",
+        "spinach": "165",
+        "red_pepper": "170",
+        "garlic": "1.5",
+        "ginger": "6",
+        "paprika": "1",
+        "thyme": "0.5",
+        "turmeric": "2",
+        "grains": "120",
+        "spring_onion": "15",
+        "seaweed": "2.2",
+        "dill": "9",
+        "kimchi": "27",
+        "beetroot": "40",
+        "extra_virgin_olive_oil": "3",
+        "lemon": "27",
+        "black_pepper": "0.5"
+    }
+
+}
