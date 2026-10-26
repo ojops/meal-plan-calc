@@ -7,95 +7,70 @@ from meal_plan_calc import nutrition, optimiser
 # saturates are always included in fat total
 # sugars are always included in carbs total
 # fibre is not included in carbs total
-
 # meals.json just using meal plan values, maybe not clear what "state", cooked/raw
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = PROJECT_ROOT / "data"
 
-exercise_split = {
-    "monday": "strength", 
+DAYS = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+]
+
+EXERCISE_SPLIT = {
+    "monday": "strength",
     "tuesday": "run",
     "wednesday": "strength",
     "thursday": "run",
     "friday": "mobility",
     "saturday": "run",
-    "sunday": "run"
+    "sunday": "run",
 }
 
-nutrients_count = {
-    "calories":0,
-    "fat":0,
-    "saturates":0,
-    "carbs":0,
-    "sugars":0,
-    "fibre":0,
-    "protein":0,
-    "salt":0
-}
-
-categories_split = {
-    "protein":2/3,
-    "carb":3/4,
-    "veg":2/3,
-    "extra":2/3,
-    "fruit":2/3,
-    "dairy":2/3,
-    "nut":2/3
+CATEGORIES_SPLIT = {
+    "protein": Decimal("2") / Decimal("3"),
+    "carb": Decimal("3") / Decimal("4"),
+    "veg": Decimal("2") / Decimal("3"),
+    "extra": Decimal("2") / Decimal("3"),
+    "fruit": Decimal("2") / Decimal("3"),
+    "dairy": Decimal("2") / Decimal("3"),
+    "nut": Decimal("2") / Decimal("3"),
 }
 
 
-with open(DATA_DIR / "foods.json", "r") as foods_file, open(DATA_DIR / "meals.json", "r") as meals_file:
-    foods = json.load(foods_file)
-    meals = json.load(meals_file)
+def print_nutrition(totals: dict[str, Decimal]) -> None:
+    for nutrient, value in totals.items():
+        print(f"{nutrient}: {value.quantize(Decimal('0.01'))}")
 
-    def print_nice(nutrition_library):
-        for nutrient in nutrients_count:
-            print(nutrient + ":", nutrition_library[nutrient].quantize(Decimal("0.01")))
 
-    def get_day_cooking_nutrition(day):
-        nutrients_temp = nutrients_count.copy()
-        for ingredient in meals[day]:
-            for nutrient in nutrients_temp:
-                nutrients_temp[nutrient] += Decimal(foods[ingredient][nutrient])*Decimal(meals[day][ingredient])/100
-        return nutrients_temp
+def main() -> None:
+    with (
+        open(DATA_DIR / "foods.json", encoding="utf-8") as foods_file,
+        open(DATA_DIR / "meals.json", encoding="utf-8") as meals_file,
+    ):
+        foods = json.load(foods_file)
+        meals = json.load(meals_file)
 
-    def get_day_cooking_lunch_nutrition(day):
-            nutrients_temp = nutrients_count.copy()
-            for ingredient in meals[day]:
-                for nutrient in nutrients_temp:
-                    nutrients_temp[nutrient] += Decimal(foods[ingredient][nutrient])*Decimal(meals[day][ingredient])*Decimal(categories_split[foods[ingredient]["category"]])/100
-            return nutrients_temp
-
-    def get_day_cooking_dinner_nutrition(day):
-            nutrients_temp = nutrients_count.copy()
-            for ingredient in meals[day]:
-                for nutrient in nutrients_temp:
-                    nutrients_temp[nutrient] += Decimal(foods[ingredient][nutrient])*Decimal(meals[day][ingredient])*Decimal(1-categories_split[foods[ingredient]["category"]])/100
-            return nutrients_temp
-
-    def get_day_eating_nutrition(day):
-        nutrients_temp = nutrients_count.copy()
-        meal_types = ["snack", "supplements", exercise_split[day], "breakfast"]
-        for meal_type in meal_types:
-            for ingredient in meals[meal_type]:
-                for nutrient in nutrients_temp:
-                    nutrients_temp[nutrient] += Decimal(foods[ingredient][nutrient])*Decimal(meals[meal_type][ingredient])/100
-        for nutrient in nutrients_temp:
-            nutrients_temp[nutrient] += get_day_cooking_lunch_nutrition([*exercise_split][[*exercise_split].index(day)-1])[nutrient]
-            nutrients_temp[nutrient] += get_day_cooking_dinner_nutrition([*exercise_split][[*exercise_split].index(day)-2])[nutrient]
-        return nutrients_temp
-
-    def get_meal_type_eating_nutrition(meal_type):
-        nutrients_temp = nutrients_count.copy()
-        for ingredient in meals[meal_type]:
-            for nutrient in nutrients_temp:
-                nutrients_temp[nutrient] += Decimal(foods[ingredient][nutrient])*Decimal(meals[meal_type][ingredient])/100
-        return nutrients_temp
-
-    for day in [*exercise_split]:
+    for day in DAYS:
         print(day.upper())
-        print_nice(get_day_eating_nutrition(day))
+
+        totals = nutrition.calculate_day_eating_nutrition(
+            day,
+            foods,
+            meals,
+            DAYS,
+            EXERCISE_SPLIT,
+            CATEGORIES_SPLIT,
+        )
+
+        print_nutrition(totals)
         print("---")
 
-    #print_nice(get_meal_type_eating_nutrition("snack"))
+
+if __name__ == "__main__":
+    main()
