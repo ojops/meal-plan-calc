@@ -2,6 +2,8 @@ from decimal import Decimal
 import json
 from pathlib import Path
 
+from meal_plan_calc import nutrition, optimiser
+
 # saturates are always included in fat total
 # sugars are always included in carbs total
 # fibre is not included in carbs total
