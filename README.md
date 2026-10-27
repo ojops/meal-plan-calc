@@ -55,6 +55,7 @@ The project is being developed incrementally, with an emphasis on accurate nutri
 
 ### Planned
 
+- **New Feature:** Generate a weekly, 2 times a weak, or fortnightly food shop
 - **Testing:** Add automated tests for nutritional calculations, meal allocation, and edge cases.
 - **Data validation:** Validate food composition data, ingredient quantities, and meal plan configurations.
 - **Nutrition targets:** Define configurable daily nutritional targets and acceptable tolerances.
