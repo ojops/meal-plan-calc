@@ -2,7 +2,7 @@ from decimal import Decimal
 import json
 from pathlib import Path
 
-from meal_plan_calc import nutrition, optimiser
+from meal_plan_calc import nutrition, optimiser, shopping
 
 # saturates are always included in fat total
 # sugars are always included in carbs total
@@ -42,6 +42,10 @@ CATEGORIES_SPLIT = {
     "nut": Decimal("2") / Decimal("3"),
 }
 
+# Choose what to output
+PRINT_NUTRITION_REPORT = False
+PRINT_SHOPPING_LIST = True
+
 
 def print_nutrition(totals: dict[str, Decimal]) -> None:
     for nutrient, value in totals.items():
@@ -56,22 +60,55 @@ def main() -> None:
         foods = json.load(foods_file)
         meals = json.load(meals_file)
 
-    # Print total nutrition for each day of week
-    for day in DAYS:
-        print(day.upper())
+    # Print the total nutrition for each day of week
+    if PRINT_NUTRITION_REPORT:
+        for day in DAYS:
+            print(day.upper())
 
-        totals = nutrition.calculate_day_eating_nutrition(
-            day,
-            foods,
+            totals = nutrition.calculate_day_eating_nutrition(
+                day,
+                foods,
+                meals,
+                DAYS,
+                EXERCISE_SPLIT,
+                CATEGORIES_SPLIT,
+            )
+
+            print_nutrition(totals)
+            print("---")
+
+    # Print the shopping list for given days
+    if PRINT_SHOPPING_LIST:
+        # Choose the days covered by the shopping list
+        SHOPPING_DAYS = DAYS[:]
+        shopping_list = shopping.calculate_shopping_quantities(
+            SHOPPING_DAYS,
             meals,
-            DAYS,
             EXERCISE_SPLIT,
-            CATEGORIES_SPLIT,
         )
 
-        print_nutrition(totals)
-        print("---")
+        # Group ingredients by category
+        shopping_by_category: dict[str, list[tuple[str, Decimal]]] = {}
 
+        for ingredient, quantity in shopping_list.items():
+            category = foods[ingredient]["category"]
+            shopping_by_category.setdefault(category, []).append(
+                (ingredient, quantity)
+            )
+
+        print(f"Shopping List ({SHOPPING_DAYS[0].upper()} to {SHOPPING_DAYS[-1].upper()}):")
+
+        # Print each category and its ingredients
+        for category in sorted(shopping_by_category):
+            print(f"\n{category.title()}")
+
+            for ingredient, quantity in sorted(
+                shopping_by_category[category]
+            ):
+                amount = f"{quantity.quantize(Decimal('0.01')):f}"
+                amount = amount.rstrip("0").rstrip(".")
+
+                print(f"   {ingredient}: {amount} g")
 
 if __name__ == "__main__":
     main()
