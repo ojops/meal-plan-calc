@@ -56,6 +56,7 @@ def main() -> None:
         foods = json.load(foods_file)
         meals = json.load(meals_file)
 
+    # Print total nutrition for each day of week
     for day in DAYS:
         print(day.upper())
 
