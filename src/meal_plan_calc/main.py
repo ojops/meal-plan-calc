@@ -80,9 +80,9 @@ def main() -> None:
     # Print the shopping list for given days
     if PRINT_SHOPPING_LIST:
         # Choose the days covered by the shopping list
-        SHOPPING_DAYS = DAYS[:]
+        shopping_days = DAYS[:]
         shopping_list = shopping.calculate_shopping_quantities(
-            SHOPPING_DAYS,
+            shopping_days,
             meals,
             EXERCISE_SPLIT,
         )
@@ -96,7 +96,7 @@ def main() -> None:
                 (ingredient, quantity)
             )
 
-        print(f"Shopping List ({SHOPPING_DAYS[0].upper()} to {SHOPPING_DAYS[-1].upper()}):")
+        print(f"Shopping List ({shopping_days[0].upper()} to {shopping_days[-1].upper()}):")
 
         # Print each category and its ingredients
         for category in sorted(shopping_by_category):
