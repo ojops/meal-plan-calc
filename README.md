@@ -1,104 +1,73 @@
 # Meal Plan Calculator
 
-A Python project for calculating daily nutritional intake and optimising food quantities to meet nutrition targets with minimal excess.
-
-## Overview
-
-This project aims to develop a meal planning tool that calculates nutritional intake from food composition data and meal plans, then optimises ingredient quantities to bring daily nutrition as close as possible to specified targets.
-
-The project is being developed incrementally, starting with nutritional calculations and progressing towards an optimisation algorithm that balances target accuracy, food quantities, and practical meal planning constraints.
-
-## Features
-
-- Nutritional calculations for individual meals and daily food intake
-- Food composition data and configurable meal plans stored in JSON
-- Nutrient tracking for calories, macronutrients, fibre, and salt
-- Allocation of prepared food between meals
-- Planned optimisation of food quantities against daily nutrition targets
-- Planned minimisation of excess nutrition and unnecessary food quantities
-
-## Requirements
-
-- Python 3.10
-- [uv](https://docs.astral.sh/uv/)
-
-The setup instructions below assume Ubuntu or WSL running Ubuntu.
-
-## Installation
-
-Clone the repository:
-
-```bash
-git clone https://github.com/ojops/meal-plan-calc.git
-cd meal-plan-calc
-```
-
-Install the project dependencies:
+Python 3.10 nutrition totals and shopping quantities from local JSON food data
+and a repeating meal-preparation schedule. Decimal arithmetic is used throughout;
+no optimiser or external nutrition service is implemented.
 
 ```bash
 uv sync --locked
-```
-
-## Usage
-
-Run the meal plan calculator from the repository root:
-
-```bash
-uv run python -m meal_plan_calc.main
-```
-
-The calculator loads food composition data and meal quantities from JSON files, calculates daily nutritional totals, and prints the results.
-
-## Development Roadmap
-
-The project is being developed incrementally, with an emphasis on accurate nutritional calculations, reliable data handling, and effective optimisation.
-
-### Planned
-
-- **New Feature:** Generate a weekly, 2 times a weak, or fortnightly food shop
-- **Testing:** Add automated tests for nutritional calculations, meal allocation, and edge cases.
-- **Data validation:** Validate food composition data, ingredient quantities, and meal plan configurations.
-- **Nutrition targets:** Define configurable daily nutritional targets and acceptable tolerances.
-- **Optimisation:** Develop an algorithm to adjust food quantities to minimise deviations from nutritional targets.
-- **Excess minimisation:** Penalise unnecessary excess while prioritising important nutritional targets.
-- **Constraints:** Support practical restrictions on ingredient quantities, food choices, and minimum or maximum serving sizes.
-- **Evaluation:** Compare optimisation results against the existing meal plan and assess nutritional accuracy and practicality.
-
-## Project Structure
-
-```text
-meal-plan-calc/
-├── data/                  # Food composition data and meal plans
-├── src/
-│   └── meal_plan_calc/
-│       ├── __init__.py
-│       ├── main.py        # Application entry point
-│       ├── nutrition.py   # Nutritional calculation functions
-│       └── optimiser.py   # Planned optimisation logic
-├── tests/                 # Automated tests
-├── pyproject.toml         # Project metadata and dependencies
-├── uv.lock                # Locked dependency versions
-├── .gitignore
-├── LICENSE
-└── README.md
-```
-
-## Development
-
-Dependencies are managed using `uv`. Add a dependency with:
-
-```bash
-uv add package-name
-```
-
-Commit changes to both `pyproject.toml` and `uv.lock` when dependencies change.
-
-Run automated tests with:
-
-```bash
 uv run pytest
+uv run meal-plan-calc
+uv run meal-plan-calc --start-day friday --days 14 --report shopping
+uv run meal-plan-calc --start-day monday --days 3 --shopping-basis eaten
+uv run python -m meal_plan_calc --report nutrition
 ```
 
-## License
+Use `--foods` and `--meals` for alternate JSON files. Example data are included in
+built wheels, so the default CLI also works away from the checkout.
+`--report` accepts `both`, `nutrition`, or `shopping`.
 
-See [LICENSE](LICENSE) for details.
+## Units, preparation and periods
+
+Nutrients are **per 100 g**: calories are kcal and the other tracked nutrients
+are grams. Ingredient quantities are grams **in the state of the corresponding
+food record** (`raw` or `cooked`). There is no raw/cooked yield conversion, pack
+rounding or inventory management. In particular, shopping quantities for cooked
+foods are not automatically purchase weights. Tablet/capsule quantities in the
+example data require manual unit/source review before treating them as grams.
+No food values have been corrected from guesses about supplier products.
+
+Lunch uses the previous day's cooking batch and dinner uses the batch from two
+days earlier, wrapping around the repeating schedule. Category fractions specify
+the lunch share; dinner receives its complement. An unspecified category goes
+entirely to lunch, rather than being counted twice.
+
+- `--shopping-basis prepared` (default) buys ingredients for batches prepared on
+  the selected days plus those days' breakfast/snack/supplement/exercise meals.
+- `--shopping-basis eaten` totals ingredients actually consumed on those days,
+  including carry-over from earlier cooking days.
+
+These bases agree over complete repeating cycles (up to Decimal rounding), but
+can differ over short periods. An eaten-basis report describes ingredient demand,
+not a purchase recommendation accounting for leftovers already in the fridge.
+
+## Configurable schedule
+
+`--schedule schedule.json` accepts:
+
+```json
+{
+  "days": ["monday", "tuesday"],
+  "exercise_split": {"monday": "strength", "tuesday": "run"},
+  "categories_split": {"carb": "0.75", "protein": "0.6666666666666666666666666667"}
+}
+```
+
+Day names must be distinct and refer to cooking meals in the meals file. Exercise
+names must also refer to meals. Common `breakfast`, `snack` and `supplements` meals
+are required, but may be empty. Any positive report length is allowed, including
+multiple cycles. Choose `--start-day` from that schedule.
+
+Food records require a category and all eight tracked nutrients. Missing nutrients
+are errors, not assumed zeros. Unknown ingredients, invalid numbers, negative
+quantities, impossible component totals and duplicate JSON keys are rejected.
+Fractions must lie in [0,1]. The optional top-level meals `comments` object is
+metadata and is not interpreted as instructions or conditional inclusion.
+
+Output rounds once to two places using Decimal's default half-even rounding.
+It is an estimate conditional on the input data. Decimal precision does not
+establish nutritional accuracy, and supplier/database sources should be checked.
+
+See [calculation notes](docs/CALCULATIONS.md) and [coding standard](docs/STYLE.md).
+Next: verify data provenance and units, then consider targets and comparisons
+before an optimisation algorithm. MIT licensed; see [LICENSE](LICENSE).
