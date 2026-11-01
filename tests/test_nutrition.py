@@ -90,11 +90,9 @@ def test_calculate_cooking_nutrition_lunch(foods, categories_split):
         "monday", foods, meals, categories_split, "lunch"
     )
 
-    expected_calories = (
-        Decimal("130") * Decimal("200") * Decimal("0.75") / Decimal("100")
-        + Decimal("165") * Decimal("100") * categories_split["protein"]
-        / Decimal("100")
-    )
+    expected_calories = Decimal("130") * Decimal("200") * Decimal("0.75") / Decimal(
+        "100"
+    ) + Decimal("165") * Decimal("100") * categories_split["protein"] / Decimal("100")
     assert result["calories"] == expected_calories
 
 
@@ -105,17 +103,15 @@ def test_calculate_cooking_nutrition_dinner(foods, categories_split):
         "monday", foods, meals, categories_split, "dinner"
     )
 
-    expected_calories = (
-        Decimal("130") * Decimal("200") * Decimal("0.25") / Decimal("100")
-        + Decimal("165") * Decimal("100")
-        * (Decimal("1") - categories_split["protein"]) / Decimal("100")
-    )
+    expected_calories = Decimal("130") * Decimal("200") * Decimal("0.25") / Decimal(
+        "100"
+    ) + Decimal("165") * Decimal("100") * (
+        Decimal("1") - categories_split["protein"]
+    ) / Decimal("100")
     assert result["calories"] == expected_calories
 
 
-def test_calculate_cooking_nutrition_rejects_invalid_meal_part(
-    foods, categories_split
-):
+def test_calculate_cooking_nutrition_rejects_invalid_meal_part(foods, categories_split):
     with pytest.raises(ValueError, match="meal_part"):
         nutrition.calculate_cooking_nutrition(
             "monday",
@@ -129,9 +125,7 @@ def test_calculate_cooking_nutrition_rejects_invalid_meal_part(
 def test_calculate_meal_type_nutrition(foods):
     meals = {"breakfast": {"rice": "100"}}
 
-    result = nutrition.calculate_meal_type_nutrition(
-        "breakfast", foods, meals
-    )
+    result = nutrition.calculate_meal_type_nutrition("breakfast", foods, meals)
 
     assert result["calories"] == Decimal("130")
     assert result["protein"] == Decimal("2.7")
@@ -160,8 +154,13 @@ def test_calculate_day_eating_nutrition(foods, categories_split):
         foods,
         meals,
         [
-            "monday", "tuesday", "wednesday", "thursday",
-            "friday", "saturday", "sunday",
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "friday",
+            "saturday",
+            "sunday",
         ],
         {
             "monday": "strength",

@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+
 def calculate_shopping_quantities(
     days: list[str],
     meals: dict,
@@ -22,8 +23,7 @@ def calculate_shopping_quantities(
                 quantity = Decimal(str(quantity))
 
                 shopping_quantities[ingredient] = (
-                    shopping_quantities.get(ingredient, Decimal("0"))
-                    + quantity
+                    shopping_quantities.get(ingredient, Decimal("0")) + quantity
                 )
 
     return shopping_quantities

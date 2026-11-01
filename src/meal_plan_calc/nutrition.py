@@ -22,7 +22,7 @@ def calculate_meal_nutrition(
     foods: dict,
     category_fractions: dict[str, Decimal] | None = None,
 ) -> dict[str, Decimal]:
-    """ Calculate nutrition for individual meal, optionally applying category fraction"""
+    """Calculate nutrition for individual meal, optionally applying category fraction"""
     totals = empty_nutrition_totals()
 
     for ingredient, quantity in meal.items():
@@ -37,9 +37,7 @@ def calculate_meal_nutrition(
 
         for nutrient in NUTRIENTS:
             value_per_100g = Decimal(str(food[nutrient]))
-            totals[nutrient] += (
-                value_per_100g * quantity * fraction / Decimal("100")
-            )
+            totals[nutrient] += value_per_100g * quantity * fraction / Decimal("100")
 
     return totals
 
@@ -98,9 +96,7 @@ def calculate_day_eating_nutrition(
     ]
 
     for meal_type in meal_types:
-        meal_totals = calculate_meal_type_nutrition(
-            meal_type, foods, meals
-        )
+        meal_totals = calculate_meal_type_nutrition(meal_type, foods, meals)
         for nutrient in NUTRIENTS:
             totals[nutrient] += meal_totals[nutrient]
 

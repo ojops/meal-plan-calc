@@ -1,8 +1,8 @@
-from decimal import Decimal
 import json
+from decimal import Decimal
 from pathlib import Path
 
-from meal_plan_calc import nutrition, optimiser, shopping
+from meal_plan_calc import nutrition, shopping
 
 # saturates are always included in fat total
 # sugars are always included in carbs total
@@ -92,23 +92,22 @@ def main() -> None:
 
         for ingredient, quantity in shopping_list.items():
             category = foods[ingredient]["category"]
-            shopping_by_category.setdefault(category, []).append(
-                (ingredient, quantity)
-            )
+            shopping_by_category.setdefault(category, []).append((ingredient, quantity))
 
-        print(f"Shopping List ({shopping_days[0].upper()} to {shopping_days[-1].upper()}):")
+        print(
+            f"Shopping List ({shopping_days[0].upper()} to {shopping_days[-1].upper()}):"
+        )
 
         # Print each category and its ingredients
         for category in sorted(shopping_by_category):
             print(f"\n{category.title()}")
 
-            for ingredient, quantity in sorted(
-                shopping_by_category[category]
-            ):
+            for ingredient, quantity in sorted(shopping_by_category[category]):
                 amount = f"{quantity.quantize(Decimal('0.01')):f}"
                 amount = amount.rstrip("0").rstrip(".")
 
                 print(f"   {ingredient}: {amount} g")
+
 
 if __name__ == "__main__":
     main()
