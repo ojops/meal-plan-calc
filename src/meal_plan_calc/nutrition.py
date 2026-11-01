@@ -1,5 +1,8 @@
 from decimal import Decimal
 
+from meal_plan_calc.planning import allocation_fractions, eating_meals
+from meal_plan_calc.validation import nonnegative_decimal
+
 NUTRIENTS = (
     "calories",
     "fat",
@@ -28,15 +31,21 @@ def calculate_meal_nutrition(
     for ingredient, quantity in meal.items():
         food = foods[ingredient]
         fraction = (
-            category_fractions.get(food["category"], Decimal("1"))
+            nonnegative_decimal(
+                category_fractions.get(food["category"], 1),
+                "category fraction",
+                maximum=1,
+            )
             if category_fractions is not None
             else Decimal("1")
         )
 
-        quantity = Decimal(str(quantity))
+        quantity = nonnegative_decimal(quantity, f"{ingredient} quantity")
 
         for nutrient in NUTRIENTS:
-            value_per_100g = Decimal(str(food[nutrient]))
+            value_per_100g = nonnegative_decimal(
+                food[nutrient], f"{ingredient}.{nutrient}"
+            )
             totals[nutrient] += value_per_100g * quantity * fraction / Decimal("100")
 
     return totals
@@ -50,15 +59,7 @@ def calculate_cooking_nutrition(
     meal_part: str,
 ) -> dict[str, Decimal]:
     """Calculate nutrition total for lunch or dinner cooked on given day"""
-    if meal_part == "lunch":
-        fractions = categories_split
-    elif meal_part == "dinner":
-        fractions = {
-            category: Decimal("1") - fraction
-            for category, fraction in categories_split.items()
-        }
-    else:
-        raise ValueError("meal_part must be 'lunch' or 'dinner'")
+    fractions = allocation_fractions(meals[day], foods, categories_split, meal_part)
 
     return calculate_meal_nutrition(
         meals[day],
@@ -86,33 +87,10 @@ def calculate_day_eating_nutrition(
 ) -> dict[str, Decimal]:
     """Calculates total nutrition for day ate food on"""
     totals = empty_nutrition_totals()
-    day_index = days.index(day)
-
-    meal_types = [
-        "snack",
-        "supplements",
-        exercise_split[day],
-        "breakfast",
-    ]
-
-    for meal_type in meal_types:
-        meal_totals = calculate_meal_type_nutrition(meal_type, foods, meals)
-        for nutrient in NUTRIENTS:
-            totals[nutrient] += meal_totals[nutrient]
-
-    # Lunch is prepared from the previous day's cooking
-    # Dinner is prepared from the cooking two days earlier
-    previous_day = days[(day_index - 1) % len(days)]
-    two_days_previous = days[(day_index - 2) % len(days)]
-
-    for cooking_day, meal_part in (
-        (previous_day, "lunch"),
-        (two_days_previous, "dinner"),
+    for meal, fractions in eating_meals(
+        day, foods, meals, days, exercise_split, categories_split
     ):
-        meal_totals = calculate_cooking_nutrition(
-            cooking_day, foods, meals, categories_split, meal_part
-        )
+        meal_totals = calculate_meal_nutrition(meal, foods, fractions)
         for nutrient in NUTRIENTS:
             totals[nutrient] += meal_totals[nutrient]
-
     return totals

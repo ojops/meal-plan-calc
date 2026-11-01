@@ -1,113 +1,123 @@
-import json
+"""Nutrition and shopping reports for a repeating meal-preparation schedule."""
+
+import argparse
 from decimal import Decimal
 from pathlib import Path
 
 from meal_plan_calc import nutrition, shopping
+from meal_plan_calc.planning import CATEGORIES_SPLIT, DAYS, EXERCISE_SPLIT
+from meal_plan_calc.validation import load_json, nonnegative_decimal, validate_data
 
-# saturates are always included in fat total
-# sugars are always included in carbs total
-# fibre is not included in carbs total
-# meals.json just using meal plan values, maybe not clear what "state", cooked/raw
-
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DATA_DIR = PROJECT_ROOT / "data"
-
-DAYS = [
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday",
-    "sunday",
-]
-
-EXERCISE_SPLIT = {
-    "monday": "strength",
-    "tuesday": "run",
-    "wednesday": "strength",
-    "thursday": "run",
-    "friday": "mobility",
-    "saturday": "run",
-    "sunday": "run",
-}
-
-CATEGORIES_SPLIT = {
-    "protein": Decimal("2") / Decimal("3"),
-    "carb": Decimal("3") / Decimal("4"),
-    "veg": Decimal("2") / Decimal("3"),
-    "extra": Decimal("2") / Decimal("3"),
-    "fruit": Decimal("2") / Decimal("3"),
-    "dairy": Decimal("2") / Decimal("3"),
-    "nut": Decimal("2") / Decimal("3"),
-}
-
-# Choose what to output
-PRINT_NUTRITION_REPORT = True
-PRINT_SHOPPING_LIST = True
+PACKAGE_DATA = Path(__file__).with_name("data")
+DATA_DIR = (
+    PACKAGE_DATA
+    if PACKAGE_DATA.is_dir()
+    else Path(__file__).resolve().parents[2] / "data"
+)
 
 
 def print_nutrition(totals: dict[str, Decimal]) -> None:
     for nutrient, value in totals.items():
-        print(f"{nutrient}: {value.quantize(Decimal('0.01'))}")
+        print(f"{nutrient}: {value:.2f}")
 
 
-def main() -> None:
-    with (
-        open(DATA_DIR / "foods.json", encoding="utf-8") as foods_file,
-        open(DATA_DIR / "meals.json", encoding="utf-8") as meals_file,
-    ):
-        foods = json.load(foods_file)
-        meals = json.load(meals_file)
-
-    # Print the total nutrition for each day of week
-    if PRINT_NUTRITION_REPORT:
-        for day in DAYS:
-            print(day.upper())
-
-            totals = nutrition.calculate_day_eating_nutrition(
-                day,
-                foods,
-                meals,
-                DAYS,
-                EXERCISE_SPLIT,
-                CATEGORIES_SPLIT,
+def main(argv=None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--foods", type=Path, default=DATA_DIR / "foods.json")
+    parser.add_argument("--meals", type=Path, default=DATA_DIR / "meals.json")
+    parser.add_argument(
+        "--schedule",
+        type=Path,
+        help="JSON with days, exercise_split and categories_split",
+    )
+    parser.add_argument(
+        "--start-day", help="Default: first day of the repeating schedule"
+    )
+    parser.add_argument(
+        "--days", type=int, default=7, help="Number of consecutive days"
+    )
+    parser.add_argument(
+        "--report", choices=("both", "nutrition", "shopping"), default="both"
+    )
+    parser.add_argument(
+        "--shopping-basis", choices=("prepared", "eaten"), default="prepared"
+    )
+    args = parser.parse_args(argv)
+    try:
+        foods, meals = load_json(args.foods), load_json(args.meals)
+        validate_data(foods, meals)
+        schedule = (
+            load_json(args.schedule)
+            if args.schedule
+            else {
+                "days": DAYS,
+                "exercise_split": EXERCISE_SPLIT,
+                "categories_split": CATEGORIES_SPLIT,
+            }
+        )
+        days = schedule["days"]
+        exercise = schedule["exercise_split"]
+        fractions = schedule["categories_split"]
+        if (
+            not isinstance(days, list)
+            or not days
+            or any(not isinstance(d, str) for d in days)
+            or len(set(days)) != len(days)
+        ):
+            raise ValueError("Schedule days must be a non-empty list of distinct names")
+        if not isinstance(exercise, dict) or not isinstance(fractions, dict):
+            raise ValueError(
+                "Schedule exercise_split and categories_split must be objects"
             )
-
-            print_nutrition(totals)
-            print("---")
-
-    # Print the shopping list for given days
-    if PRINT_SHOPPING_LIST:
-        # Choose the days covered by the shopping list
-        shopping_days = DAYS[:]
-        shopping_list = shopping.calculate_shopping_quantities(
-            shopping_days,
-            meals,
-            EXERCISE_SPLIT,
-        )
-
-        # Group ingredients by category
-        shopping_by_category: dict[str, list[tuple[str, Decimal]]] = {}
-
-        for ingredient, quantity in shopping_list.items():
-            category = foods[ingredient]["category"]
-            shopping_by_category.setdefault(category, []).append((ingredient, quantity))
-
-        print(
-            f"Shopping List ({shopping_days[0].upper()} to {shopping_days[-1].upper()}):"
-        )
-
-        # Print each category and its ingredients
-        for category in sorted(shopping_by_category):
-            print(f"\n{category.title()}")
-
-            for ingredient, quantity in sorted(shopping_by_category[category]):
-                amount = f"{quantity.quantize(Decimal('0.01')):f}"
-                amount = amount.rstrip("0").rstrip(".")
-
-                print(f"   {ingredient}: {amount} g")
+        fractions = {
+            k: nonnegative_decimal(v, f"{k} fraction", maximum=1)
+            for k, v in fractions.items()
+        }
+        for day in days:
+            if day not in meals or day not in exercise or exercise[day] not in meals:
+                raise ValueError(f"Missing cooking or exercise meal for {day}")
+        for name in ("breakfast", "snack", "supplements"):
+            if name not in meals:
+                raise ValueError(f"Missing meal {name}")
+        if args.days <= 0:
+            raise ValueError("--days must be positive")
+        start = days.index(args.start_day or days[0])
+        selected = [days[(start + i) % len(days)] for i in range(args.days)]
+        if args.report in ("both", "nutrition"):
+            for day in selected:
+                print(day.upper())
+                print_nutrition(
+                    nutrition.calculate_day_eating_nutrition(
+                        day, foods, meals, days, exercise, fractions
+                    )
+                )
+                print("---")
+        if args.report in ("both", "shopping"):
+            quantities = (
+                shopping.calculate_shopping_quantities(selected, meals, exercise)
+                if args.shopping_basis == "prepared"
+                else shopping.calculate_eating_quantities(
+                    selected, foods, meals, days, exercise, fractions
+                )
+            )
+            print(f"Shopping List ({args.days} days, {args.shopping_basis} basis)")
+            print(
+                "Grams in each food's recorded raw/cooked state; no yield conversion."
+            )
+            grouped = {}
+            for ingredient, quantity in quantities.items():
+                grouped.setdefault(foods[ingredient]["category"], []).append(
+                    (ingredient, quantity)
+                )
+            for category, entries in sorted(grouped.items()):
+                print(f"\n{category.title()}")
+                for ingredient, quantity in sorted(entries):
+                    amount = f"{quantity:.2f}".rstrip("0").rstrip(".")
+                    print(f"   {ingredient}: {amount} g")
+        return 0
+    except (OSError, ValueError, KeyError, TypeError) as error:
+        parser.error(str(error))
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
