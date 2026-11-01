@@ -43,7 +43,7 @@ CATEGORIES_SPLIT = {
 }
 
 # Choose what to output
-PRINT_NUTRITION_REPORT = False
+PRINT_NUTRITION_REPORT = True
 PRINT_SHOPPING_LIST = True
 
 

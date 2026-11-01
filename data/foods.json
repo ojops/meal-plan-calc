@@ -69,7 +69,7 @@
         "sugars": "0.5",
         "fibre": "0.5",
         "protein": "8.2",
-        "salt": "0.25"
+        "salt": "0.005"
     },
 
     "pasta": {
@@ -92,12 +92,12 @@
         "state": "raw",
         "calories": "184",
         "fat": "3.2",
-        "saturates": "0.25",
+        "saturates": "0.4",
         "carbs": "31",
         "sugars": "1.2",
         "fibre": "4",
         "protein": "5.8",
-        "salt": "0.25"
+        "salt": "0.01"
     },
 
     "grains": {
@@ -111,21 +111,21 @@
         "sugars": "0.7",
         "fibre": "4",
         "protein": "5.5",
-        "salt": "0.25"
+        "salt": "0.04"
     },
 
     "lentils": {
         "category": "carb",
         "instore_name": "Merchant Gourmet Microwave Ready to eat Beluga Lentils 250g",
         "state": "raw",
-        "calories": "143",
+        "calories": "142",
         "fat": "1.7",
         "saturates": "0.25",
-        "carbs": "17",
+        "carbs": "19",
         "sugars": "0.5",
-        "fibre": "8.1",
+        "fibre": "4",
         "protein": "11",
-        "salt": "0.25"
+        "salt": "0.02"
     },
 
     "chickpeas": {
@@ -414,12 +414,12 @@
         "state": "raw",
         "calories": "33",
         "fat": "1.8",
-        "saturates": "0.25",
-        "carbs": "0.05",
-        "sugars": "0.05",
+        "saturates": "0.3",
+        "carbs": "0",
+        "sugars": "0",
         "fibre": "0.6",
         "protein": "3.3",
-        "salt": "0.25"
+        "salt": "0.09"
     },
 
     "yoghurt": {
@@ -428,12 +428,12 @@
         "state": "raw",
         "calories": "42",
         "fat": "2.3",
-        "saturates": "0.25",
+        "saturates": "0.4",
         "carbs": "0.05",
         "sugars": "0.05",
         "fibre": "0.9",
         "protein": "4",
-        "salt": "0.25"
+        "salt": "0.24"
     },
 
     "kefir": {
@@ -447,7 +447,7 @@
         "sugars": "7",
         "fibre": "2",
         "protein": "5",
-        "salt": "0.25"
+        "salt": "0.19"
     },
 
     "cinnamon": {
@@ -1026,7 +1026,7 @@
     },
 
     "electrolytes_tablet":{
-        "comment": "any flavour good nutrition",
+        "comment": "any flavour good nutrition, one tablet: 4.3g",
         "category": "supplement",
         "instore_name": "Science in Sport: Hydro Tablets",
         "link": "https://www.scienceinsport.com/shop-sis/go-range/go-hydro-tablets/sis-hydro-tablets-pack",

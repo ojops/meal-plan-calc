@@ -11,7 +11,7 @@
         "yoghurt": "69",
         "banana": "80",
         "almonds": "5",
-        "brazil_nuts": "10"
+        "brazil_nuts": "9"
     },
 
     "supplements": {
@@ -22,8 +22,8 @@
     },
     
     "run": {
-        "electrolytes_tablet": "10",
-        "collagen": "20",
+        "electrolytes_tablet": "4.3",
+        "collagen": "15",
         "kiwi": "70",
         "electrolytes_powder": "6",
         "milk": "200",
@@ -32,7 +32,7 @@
     },
 
     "strength": {
-        "collagen": "20",
+        "collagen": "15",
         "kiwi": "70",
         "milk": "200",
         "kefir": "95",
