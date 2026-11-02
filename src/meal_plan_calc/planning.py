@@ -1,5 +1,3 @@
-"""The repeating schedule and allocation of a cooking batch between two meals."""
-
 from decimal import Decimal
 
 from meal_plan_calc.validation import nonnegative_decimal
@@ -8,10 +6,14 @@ DAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sun
 EXERCISE_SPLIT = dict(
     zip(DAYS, ("strength", "run", "strength", "run", "mobility", "run", "run"))
 )
+
+
 CATEGORIES_SPLIT = {
     category: Decimal(2) / Decimal(3)
     for category in ("protein", "veg", "extra", "fruit", "dairy", "nut")
 }
+
+
 CATEGORIES_SPLIT["carb"] = Decimal(3) / Decimal(4)
 
 
@@ -29,7 +31,7 @@ def allocation_fractions(meal, foods, categories_split, meal_part):
 
 
 def eating_meals(day, foods, meals, days, exercise_split, categories_split):
-    """Yield meals and fractions eaten today, including periodic carry-over."""
+    """Yield meals and fractions eaten today, including periodic carry over"""
     if not days or len(set(days)) != len(days):
         raise ValueError("The repeating schedule must contain distinct days")
     index = days.index(day)

@@ -27,7 +27,6 @@ def calculate_meal_nutrition(
 ) -> dict[str, Decimal]:
     """Calculate nutrition for individual meal, optionally applying category fraction"""
     totals = empty_nutrition_totals()
-
     for ingredient, quantity in meal.items():
         food = foods[ingredient]
         fraction = (
@@ -39,15 +38,12 @@ def calculate_meal_nutrition(
             if category_fractions is not None
             else Decimal("1")
         )
-
         quantity = nonnegative_decimal(quantity, f"{ingredient} quantity")
-
         for nutrient in NUTRIENTS:
             value_per_100g = nonnegative_decimal(
                 food[nutrient], f"{ingredient}.{nutrient}"
             )
             totals[nutrient] += value_per_100g * quantity * fraction / Decimal("100")
-
     return totals
 
 
@@ -60,7 +56,6 @@ def calculate_cooking_nutrition(
 ) -> dict[str, Decimal]:
     """Calculate nutrition total for lunch or dinner cooked on given day"""
     fractions = allocation_fractions(meals[day], foods, categories_split, meal_part)
-
     return calculate_meal_nutrition(
         meals[day],
         foods,

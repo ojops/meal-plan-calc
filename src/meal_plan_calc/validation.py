@@ -1,5 +1,3 @@
-"""Small input-boundary checks; nutritional quantities are grams, rates per 100 g."""
-
 import json
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
@@ -11,7 +9,7 @@ def nonnegative_decimal(value, label: str, *, maximum=None) -> Decimal:
             raise ValueError
         number = Decimal(str(value))
     except (InvalidOperation, ValueError):
-        raise ValueError(f"{label} must be a finite non-negative number") from None
+        raise ValueError(f"{label} must be a finite non negative number") from None
     if (
         not number.is_finite()
         or number < 0
@@ -33,7 +31,7 @@ def load_json(path: Path) -> dict:
         return result
 
     def invalid_constant(value):
-        raise ValueError(f"Non-finite JSON number: {value}")
+        raise ValueError(f"Non finite JSON number: {value}")
 
     with path.open(encoding="utf-8") as handle:
         result = json.load(

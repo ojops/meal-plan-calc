@@ -1,5 +1,3 @@
-"""Nutrition and shopping reports for a repeating meal-preparation schedule."""
-
 import argparse
 from decimal import Decimal
 from pathlib import Path
@@ -64,7 +62,7 @@ def main(argv=None) -> int:
             or any(not isinstance(d, str) for d in days)
             or len(set(days)) != len(days)
         ):
-            raise ValueError("Schedule days must be a non-empty list of distinct names")
+            raise ValueError("Schedule days must be a non empty list of distinct names")
         if not isinstance(exercise, dict) or not isinstance(fractions, dict):
             raise ValueError(
                 "Schedule exercise_split and categories_split must be objects"
