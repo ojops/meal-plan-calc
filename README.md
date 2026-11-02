@@ -1,73 +1,128 @@
 # Meal Plan Calculator
 
-Python 3.10 nutrition totals and shopping quantities from local JSON food data
-and a repeating meal-preparation schedule. Decimal arithmetic is used throughout;
-no optimiser or external nutrition service is implemented.
+A Python project for calculating daily nutritional intake and shopping quantities
+from a meal plan, with the longer-term aim of adjusting food quantities to meet
+nutrition targets with minimal excess.
+
+## Overview
+
+The calculator uses food composition data and meal quantities stored in JSON.
+It accounts for a repeating cooking schedule and the allocation of prepared food
+between lunch and dinner. Development is progressing from nutritional
+calculations towards target comparisons and practical optimisation.
+
+## Features
+
+- Nutritional totals for individual meals and daily intake
+- Tracking of calories, fat, saturates, carbohydrates, sugars, fibre, protein and salt
+- Configurable food data, meal quantities and exercise schedule
+- Shopping quantities for weekly, twice-weekly or fortnightly periods
+- Separate reports for ingredients prepared or eaten during a period
+- Input validation and automated calculation tests
+
+Optimisation and nutrition targets are planned; neither is implemented yet.
+
+## Requirements
+
+- Python 3.10
+- [uv](https://docs.astral.sh/uv/)
+
+The following instructions assume Ubuntu or WSL running Ubuntu.
+
+## Installation
+
+Clone the repository and install its dependencies:
 
 ```bash
+git clone https://github.com/ojops/meal-plan-calc.git
+cd meal-plan-calc
 uv sync --locked
-uv run pytest
+```
+
+## Usage
+
+Run the calculator from the repository root:
+
+```bash
 uv run meal-plan-calc
-uv run meal-plan-calc --start-day friday --days 14 --report shopping
-uv run meal-plan-calc --start-day monday --days 3 --shopping-basis eaten
-uv run python -m meal_plan_calc --report nutrition
 ```
 
-Use `--foods` and `--meals` for alternate JSON files. Example data are included in
-built wheels, so the default CLI also works away from the checkout.
-`--report` accepts `both`, `nutrition`, or `shopping`.
+By default, it prints daily nutrition and a shopping list for one week.
+The module command also works: `uv run python -m meal_plan_calc`.
 
-## Units, preparation and periods
+Choose a report and period without editing the source:
 
-Nutrients are **per 100 g**: calories are kcal and the other tracked nutrients
-are grams. Ingredient quantities are grams **in the state of the corresponding
-food record** (`raw` or `cooked`). There is no raw/cooked yield conversion, pack
-rounding or inventory management. In particular, shopping quantities for cooked
-foods are not automatically purchase weights. Tablet/capsule quantities in the
-example data require manual unit/source review before treating them as grams.
-No food values have been corrected from guesses about supplier products.
+```bash
+# Daily nutrition only
+uv run meal-plan-calc --report nutrition
 
-Lunch uses the previous day's cooking batch and dinner uses the batch from two
-days earlier, wrapping around the repeating schedule. Category fractions specify
-the lunch share; dinner receives its complement. An unspecified category goes
-entirely to lunch, rather than being counted twice.
+# A fortnight's shopping
+uv run meal-plan-calc --days 14 --report shopping
 
-- `--shopping-basis prepared` (default) buys ingredients for batches prepared on
-  the selected days plus those days' breakfast/snack/supplement/exercise meals.
-- `--shopping-basis eaten` totals ingredients actually consumed on those days,
-  including carry-over from earlier cooking days.
-
-These bases agree over complete repeating cycles (up to Decimal rounding), but
-can differ over short periods. An eaten-basis report describes ingredient demand,
-not a purchase recommendation accounting for leftovers already in the fridge.
-
-## Configurable schedule
-
-`--schedule schedule.json` accepts:
-
-```json
-{
-  "days": ["monday", "tuesday"],
-  "exercise_split": {"monday": "strength", "tuesday": "run"},
-  "categories_split": {"carb": "0.75", "protein": "0.6666666666666666666666666667"}
-}
+# Two shopping periods: Monday–Wednesday and Thursday–Sunday
+uv run meal-plan-calc --start-day monday --days 3 --report shopping
+uv run meal-plan-calc --start-day thursday --days 4 --report shopping
 ```
 
-Day names must be distinct and refer to cooking meals in the meals file. Exercise
-names must also refer to meals. Common `breakfast`, `snack` and `supplements` meals
-are required, but may be empty. Any positive report length is allowed, including
-multiple cycles. Choose `--start-day` from that schedule.
+Shopping defaults to ingredients prepared during the selected days. Use
+`--shopping-basis eaten` for quantities consumed instead, including food from
+earlier cooking days. Neither report accounts for existing stock or pack sizes.
 
-Food records require a category and all eight tracked nutrients. Missing nutrients
-are errors, not assumed zeros. Unknown ingredients, invalid numbers, negative
-quantities, impossible component totals and duplicate JSON keys are rejected.
-Fractions must lie in [0,1]. The optional top-level meals `comments` object is
-metadata and is not interpreted as instructions or conditional inclusion.
+Edit `data/foods.json` and `data/meals.json` to change the supplied plan.
+Use `--foods`, `--meals` or `--schedule` to select alternate JSON files;
+`uv run meal-plan-calc --help` lists all options.
 
-Output rounds once to two places using Decimal's default half-even rounding.
-It is an estimate conditional on the input data. Decimal precision does not
-establish nutritional accuracy, and supplier/database sources should be checked.
+## Calculation assumptions
 
-See [calculation notes](docs/CALCULATIONS.md) and [coding standard](docs/STYLE.md).
-Next: verify data provenance and units, then consider targets and comparisons
-before an optimisation algorithm. MIT licensed; see [LICENSE](LICENSE).
+Lunch uses the previous day's cooking and dinner uses cooking from two days
+earlier, wrapping around the schedule. Category fractions define the lunch share;
+dinner receives the remainder.
+
+Nutrients are recorded per 100 g. Quantities use the food record's raw or cooked
+state, with no conversion to purchase weights. Some supplement quantities appear
+to be tablet or capsule counts but are displayed as grams; these units still need
+to be resolved. Results depend on the accuracy of the supplied food data.
+
+See [calculation notes](docs/CALCULATIONS.md) for allocation, units and custom
+schedule details.
+
+## Development Roadmap
+
+- **Data and units:** Verify food sources and distinguish grams, tablet counts and purchase weights.
+- **Nutrition targets:** Define daily targets and acceptable tolerances.
+- **Comparisons:** Show how the current meal plan differs from those targets.
+- **Optimisation:** Adjust ingredient quantities to reduce target deviations and unnecessary excess.
+- **Constraints:** Support portion limits, food preferences and practical meal preparation.
+- **Evaluation:** Compare proposed plans with the existing plan for accuracy and practicality.
+
+## Project Structure
+
+| Path | Purpose |
+| --- | --- |
+| `data/` | Food composition data and meal quantities |
+| `src/meal_plan_calc/main.py` | Terminal arguments and report output |
+| `src/meal_plan_calc/planning.py` | Schedule defaults and meal allocation |
+| `src/meal_plan_calc/nutrition.py` | Nutritional calculations |
+| `src/meal_plan_calc/shopping.py` | Prepared and eaten ingredient quantities |
+| `src/meal_plan_calc/validation.py` | JSON loading and input checks |
+| `tests/` | Automated tests |
+| `docs/` | Calculation notes and coding conventions |
+| `pyproject.toml`, `uv.lock` | Project configuration and locked dependencies |
+
+## Development
+
+Run the tests and code checks:
+
+```bash
+uv run pytest
+uv run ruff check .
+uv run ruff format --check .
+```
+
+Add dependencies with `uv add package-name` and commit both `pyproject.toml`
+and `uv.lock` when they change. GitHub Actions runs the checks on pushes and
+pull requests. See [coding conventions](docs/STYLE.md).
+
+## License
+
+MIT licensed. See [LICENSE](LICENSE).
