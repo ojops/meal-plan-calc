@@ -97,17 +97,33 @@ schedule details.
 
 ## Project Structure
 
-| Path | Purpose |
-| --- | --- |
-| `data/` | Food composition data and meal quantities |
-| `src/meal_plan_calc/main.py` | Terminal arguments and report output |
-| `src/meal_plan_calc/planning.py` | Schedule defaults and meal allocation |
-| `src/meal_plan_calc/nutrition.py` | Nutritional calculations |
-| `src/meal_plan_calc/shopping.py` | Prepared and eaten ingredient quantities |
-| `src/meal_plan_calc/validation.py` | JSON loading and input checks |
-| `tests/` | Automated tests |
-| `docs/` | Calculation notes and coding conventions |
-| `pyproject.toml`, `uv.lock` | Project configuration and locked dependencies |
+```text
+meal-plan-calc/
+├── .github/
+│   └── workflows/
+│       └── checks.yml     # Automated tests and code checks
+├── data/
+│   ├── foods.json         # Food composition data
+│   └── meals.json         # Meal quantities
+├── docs/
+│   ├── CALCULATIONS.md    # Calculation assumptions, units and schedules
+│   └── STYLE.md           # Coding conventions
+├── src/
+│   └── meal_plan_calc/
+│       ├── __init__.py
+│       ├── __main__.py    # Supports python -m meal_plan_calc
+│       ├── main.py        # Terminal arguments and report output
+│       ├── nutrition.py   # Nutritional calculations
+│       ├── planning.py    # Schedule defaults and meal allocation
+│       ├── shopping.py    # Prepared and eaten ingredient quantities
+│       └── validation.py  # JSON loading and input checks
+├── tests/                 # Automated calculation and validation tests
+├── pyproject.toml         # Project configuration and dependencies
+├── uv.lock                # Locked dependency versions
+├── .gitignore
+├── LICENSE
+└── README.md
+```
 
 ## Development
 
