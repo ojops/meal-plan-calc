@@ -2,6 +2,14 @@
 
 A Python project for calculating daily nutritional intake and shopping quantities from a meal plan, with the longer term aim of adjusting food quantities to meet nutrition targets with minimal excess.
 
+[![Calculated weekly nutrition from the supplied meal plan](docs/media/preview.gif)](docs/media/demo.mp4?raw=1)
+
+**[Watch the full demonstration — 36 seconds, 1080p](docs/media/demo.mp4?raw=1).**
+Trace a rice batch across days, change the oats input, and compare shopping
+periods using the real Decimal calculations. Quantities retain the food records'
+raw/cooked states; supplement units still need verification.
+[Recorded results](docs/media/demo-data.json) · [Regenerate the video](docs/DEMO.md).
+
 ## Overview
 
 The calculator uses food composition data and meal quantities stored in JSON. It accounts for a repeating cooking schedule and the allocation of prepared food between lunch and dinner. Development is progressing from nutritional calculations towards target comparisons and practical optimisation.
