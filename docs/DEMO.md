@@ -1,9 +1,16 @@
 # Reproducing the portfolio demonstration
 
-`media/demo.mp4` is a 36-second silent film, 1920 × 1080 at 30 FPS, encoded as
-H.264/yuv420p with fast-start metadata. `media/preview.gif` is an 8-second,
-768 × 432, 10 FPS looping excerpt. Both are small enough to keep in Git; relative
-README links work on review branches and after merging without external hosting.
+`media/demo.mp4` is a 36-second silent film, 1920 × 1080 at 30 FPS,
+encoded as H.264/yuv420p with fast-start metadata. `media/demo.gif` shows
+the entire 36-second film at its original pace, at 768 × 432 and 10 FPS,
+looping directly in the README. There is no shortened excerpt.
+
+Both media files are tracked in Git. The animation uses a relative link;
+the MP4 link uses a raw GitHub URL pinned to its media commit to avoid
+branch-dependent redirects. When regenerating and committing a new MP4,
+update the pinned README links to that commit. The link opens or downloads
+the MP4 depending on the browser; the README animation itself has no
+play/pause controls. No external hosting service is required.
 
 From the repository root, with Python 3.10 and uv:
 
@@ -65,7 +72,7 @@ uv run --locked pytest
 uv run --locked ruff check .
 uv run --locked ruff format --check .
 ffmpeg -v error -i docs/media/demo.mp4 -f null -
-ffmpeg -v error -i docs/media/preview.gif -f null -
+ffmpeg -v error -i docs/media/demo.gif -f null -
 ```
 
 The completed run passed 29 tests, Ruff lint and formatting. Recording tests

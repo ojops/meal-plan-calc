@@ -2,13 +2,15 @@
 
 A Python project for calculating daily nutritional intake and shopping quantities from a meal plan, with the longer term aim of adjusting food quantities to meet nutrition targets with minimal excess.
 
-[![Calculated weekly nutrition from the supplied meal plan](docs/media/preview.gif)](docs/media/demo.mp4?raw=1)
+[![Calculated weekly nutrition from the supplied meal plan](docs/media/demo.gif)](https://raw.githubusercontent.com/ojops/meal-plan-calc/45d36fb767beec954759e319df599bb409524fab/docs/media/demo.mp4)
 
-**[Watch the full demonstration — 36 seconds, 1080p](docs/media/demo.mp4?raw=1).**
+**[Open or download the full MP4 — 36 seconds, 1080p](https://raw.githubusercontent.com/ojops/meal-plan-calc/45d36fb767beec954759e319df599bb409524fab/docs/media/demo.mp4).**
 Trace a rice batch across days, change the oats input, and compare shopping
 periods using the real Decimal calculations. Quantities retain the food records'
 raw/cooked states; supplement units still need verification.
 [Recorded results](docs/media/demo-data.json) · [Regenerate the video](docs/DEMO.md).
+
+The animation above plays the complete demonstration. Click it to open or download the 1080p MP4.
 
 ## Overview
 
