@@ -13,6 +13,7 @@ jobs:
           python-version: "3.10"
       - run: uv sync --locked
       - run: uv run --locked ruff check .
-      - run: uv run --locked ruff format --check .
+      - run: uv run --locked ruff format --diff scripts/render_demo.py src/meal_plan_calc/demo_data.py
       - run: uv run --locked pytest
       - run: uv run --locked --extra demo python scripts/render_demo.py --stills-only --output-dir /tmp/meal-demo-stills
+      - run: uv run --locked ruff format --check .
