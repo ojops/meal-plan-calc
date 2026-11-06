@@ -188,7 +188,13 @@ def frame(t, data):
             mono=True,
             bold=True,
         )
-        text(draw, (120, 450), f'{scenario["before_g"]} g → {scenario["after_g"]} g', 40, TEAL)
+        text(
+            draw,
+            (120, 450),
+            f"{scenario['before_g']} g → {scenario['after_g']} g",
+            40,
+            TEAL,
+        )
         text(draw, (120, 525), "The saved source plan is unchanged.", 26, MUTED)
         label(draw, 120, 628, "Every day gains")
         metric(
@@ -196,14 +202,28 @@ def frame(t, data):
             120,
             682,
             f"+{scenario['monday_delta']['calories']:.2f}",
-            f'kcal from {scenario["after_g"] - scenario["before_g"]} g more {scenario["ingredient"]}',
+            f"kcal from {scenario['after_g'] - scenario['before_g']} g more {scenario['ingredient']}",
             TEAL,
         )
         text(draw, (120, 842), "Scenario analysis; no optimisation.", 25, AMBER)
         panel(draw, (760, 250, 1840, 917))
         label(draw, 800, 290, "Monday · full day recalculated")
-        text(draw, (1170, 350), f'{scenario["before_g"]} g {scenario["ingredient"]}', 25, MUTED, anchor="rt")
-        text(draw, (1500, 350), f'{scenario["after_g"]} g {scenario["ingredient"]}', 25, TEAL, anchor="rt")
+        text(
+            draw,
+            (1170, 350),
+            f"{scenario['before_g']} g {scenario['ingredient']}",
+            25,
+            MUTED,
+            anchor="rt",
+        )
+        text(
+            draw,
+            (1500, 350),
+            f"{scenario['after_g']} g {scenario['ingredient']}",
+            25,
+            TEAL,
+            anchor="rt",
+        )
         text(draw, (1800, 350), "Change", 25, MUTED, anchor="rt")
         for i, (key, caption, unit) in enumerate(
             [

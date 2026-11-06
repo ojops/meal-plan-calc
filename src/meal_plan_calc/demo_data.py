@@ -31,8 +31,8 @@ def build_demo(data_dir: Path) -> dict:
             for day in DAYS
         }
 
-    ingredient = "oats" if "oats" in meals["breakfast"] else next(
-        iter(meals["breakfast"]), None
+    ingredient = (
+        "oats" if "oats" in meals["breakfast"] else next(iter(meals["breakfast"]), None)
     )
     if ingredient is None:
         raise ValueError("The demonstration requires a nonempty breakfast")
@@ -109,9 +109,7 @@ def build_demo(data_dir: Path) -> dict:
             "lunch_g": quantity * fraction,
             "dinner_g": quantity * (1 - fraction),
             "lunch": calculate_meal_nutrition(batch, foods, {category: fraction}),
-            "dinner": calculate_meal_nutrition(
-                batch, foods, {category: 1 - fraction}
-            ),
+            "dinner": calculate_meal_nutrition(batch, foods, {category: 1 - fraction}),
         },
         "shopping": shopping,
         "display_ingredients": displayed[:4],
