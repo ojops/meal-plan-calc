@@ -16,7 +16,7 @@ NUTRIENTS = (
 
 
 def empty_nutrition_totals() -> dict[str, Decimal]:
-    """Produce dictionary with all nutrients as 0"""
+    """Return zero-valued totals for every tracked nutrient."""
     return {nutrient: Decimal("0") for nutrient in NUTRIENTS}
 
 
@@ -25,7 +25,7 @@ def calculate_meal_nutrition(
     foods: dict,
     category_fractions: dict[str, Decimal] | None = None,
 ) -> dict[str, Decimal]:
-    """Calculate nutrition for individual meal, optionally applying category fraction"""
+    """Sum meal nutrients, optionally applying per-category allocation fractions."""
     totals = empty_nutrition_totals()
     for ingredient, quantity in meal.items():
         food = foods[ingredient]
@@ -54,7 +54,7 @@ def calculate_cooking_nutrition(
     categories_split: dict[str, Decimal],
     meal_part: str,
 ) -> dict[str, Decimal]:
-    """Calculate nutrition total for lunch or dinner cooked on given day"""
+    """Return the lunch or dinner share of a day's cooked batch."""
     fractions = allocation_fractions(meals[day], foods, categories_split, meal_part)
     return calculate_meal_nutrition(
         meals[day],
@@ -68,7 +68,7 @@ def calculate_meal_type_nutrition(
     foods: dict,
     meals: dict,
 ) -> dict[str, Decimal]:
-    """Calculate nutrition totals for specific meal type"""
+    """Return nutrient totals for the selected meal type."""
     return calculate_meal_nutrition(meals[meal_type], foods)
 
 
@@ -80,7 +80,7 @@ def calculate_day_eating_nutrition(
     exercise_split: dict[str, str],
     categories_split: dict[str, Decimal],
 ) -> dict[str, Decimal]:
-    """Calculates total nutrition for day ate food on"""
+    """Return nutrients eaten on a day, including portions from earlier batches."""
     totals = empty_nutrition_totals()
     for meal, fractions in eating_meals(
         day, foods, meals, days, exercise_split, categories_split
