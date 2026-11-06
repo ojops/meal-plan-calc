@@ -1,14 +1,22 @@
 # Coding conventions
 
-- Use Python 3.10 compatible syntax, four space indentation, `snake_case` functions and variables, and `UPPER_CASE` constants.
-- Let Ruff handle formatting at 88 columns and import ordering: standard library, third party packages, then local modules. Keep two blank lines between module level definitions.
-- Prefer readable names and straightforward code. Use comments to explain assumptions, units and decisions, and avoid restating obvious operations.
-- Give public functions concise docstrings and useful type annotations. Keep dictionaries for the JSON food and meal data.
-- Use `Decimal` for quantities, nutrient values, and allocation fractions. Round for display rather than during calculations.
-- Keep calculations separate from printing. Reject invalid input with clear errors instead of silently substituting missing values.
-- Keep formatting changes separate from changes to calculation behaviour.
+These conventions favour clear calculations and dependable input handling.
 
-Run these checks before committing:
+## Python
+
+- Target Python 3.10; use four-space indentation and Ruff's 88-character formatting.
+- Use `snake_case` for names and `UPPER_CASE` for constants. Let Ruff organise imports.
+- Use concise public docstrings and type annotations where they clarify interfaces.
+- Keep calculations separate from CLI output. Prefer simple functions to unnecessary abstractions.
+
+## Numerical and data rules
+
+- Use `Decimal` for food quantities, nutrient values and allocation fractions.
+- Round only for display, not during calculations.
+- Validate external JSON data and report malformed values rather than substituting guesses.
+- Explain non-obvious units, schedule behaviour and assumptions in comments; avoid narrating straightforward code.
+
+## Checks
 
 ```bash
 uv run ruff check .
@@ -16,4 +24,4 @@ uv run ruff format --check .
 uv run pytest
 ```
 
-Use `uv run ruff format .` to apply formatting. Ruff checks imports, unused code and basic errors, there is no requirement to annotate every helper or test.
+Apply formatting with `uv run ruff format .`. Keep purely cosmetic edits separate from calculation changes when practical.

@@ -1,85 +1,52 @@
-# Reproducing the portfolio demonstration
+# Portfolio video: reproduction and verification
 
-`media/demo.mp4` is a 36-second silent film, 1920 × 1080 at 30 FPS,
-encoded as H.264/yuv420p with fast-start metadata. `media/preview.gif` loops the opening eight seconds at 768 × 432 and 10 FPS.
-The full-length MP4 remains available from the README.
+The README embeds an **eight-second looping GIF** (`docs/media/preview.gif`) linked to the complete **36-second, silent 1080p MP4** (`docs/media/demo.mp4`).
 
-Both media files are tracked in Git. The animation uses a relative link;
-the MP4 link uses a raw GitHub URL pinned to its media commit to avoid
-branch-dependent redirects. When regenerating and committing a new MP4,
-update the pinned README links to that commit. The link opens or downloads
-the MP4 depending on the browser; the README animation itself has no
-play/pause controls. No external hosting service is required.
+The committed media shows a **snapshot** of the supplied meal plan when the video was produced. Regenerating the video uses the **current** `data/foods.json` and `data/meals.json`; changing those files does not retroactively update the committed MP4 or GIF.
 
-From the repository root, with Python 3.10 and uv:
+## Generate
+
+From the repository root, with Python 3.10 and [uv](https://docs.astral.sh/uv/):
 
 ```bash
 uv sync --locked --extra demo
 uv run --locked --extra demo python scripts/render_demo.py
 ```
 
-Install FFmpeg with libx264 and DejaVu Sans/Mono (Ubuntu packages `ffmpeg` and
-`fonts-dejavu-core`). Pillow 12.3.0 is an optional `demo` extra; runtime
-calculation dependencies and public interfaces are unchanged. Rendering uses the
-CPU and needs no display, browser, graphics driver or external data service.
+Install FFmpeg with H.264 support and DejaVu fonts (Ubuntu: `ffmpeg`, `fonts-dejavu-core`). The optional `demo` extra installs Pillow; normal calculations do not require it. Rendering is CPU-based and needs no graphics display or external data.
 
-Use `--output-dir /path/to/output` to select another destination. To inspect the
-four chapter layouts without encoding a video:
+Use `--output-dir /path/to/output` for another destination. To inspect chapter layouts without video encoding:
 
 ```bash
 uv run --locked --extra demo python scripts/render_demo.py --stills-only --output-dir /tmp/meal-demo-stills
 ```
 
-## Source of every result
+## What the film demonstrates
 
-`meal_plan_calc.demo_data.build_demo()` loads and validates the repository's
-`data/foods.json` and `data/meals.json`. It calls the existing
-`calculate_day_eating_nutrition`, `calculate_meal_nutrition`,
-`calculate_shopping_quantities` and `calculate_eating_quantities` functions.
-There is no alternative nutrition engine in the renderer.
-
-The JSON recording retains Decimal values as strings, along with SHA-256
-checksums of both inputs, so display rounding never becomes a calculation input.
-Conversion to floating point is used only for chart geometry. The video rounds
-tables to two places and weekly bar labels to whole kcal; full precision remains
-in `media/demo-data.json`.
-
-| Time | Demonstration and recorded example |
+| Time | Content |
 | --- | --- |
-| 0–8 s | Current seven-day nutrition totals and a breakfast ingredient contribution |
-| 8–17 s | Trace a recorded carbohydrate batch into later lunch/dinner servings |
-| 17–26 s | Increase a breakfast ingredient by 25 g in an isolated copy and recalculate |
-| 26–36 s | Compare current 3-, 7- and 14-day prepared/eaten shopping totals |
+| 0–8 s | Daily nutrient totals and one breakfast ingredient's contribution |
+| 8–17 s | Allocation of a prepared carbohydrate batch to later meals |
+| 17–26 s | Change one breakfast quantity by 25 g in a copy of the plan |
+| 26–36 s | Compare 3-, 7- and 14-day prepared/eaten shopping quantities |
 
-The scenario derives baseline amounts and nutrient differences from the current
-input files without modifying the saved plan. If oats are absent, another
-breakfast ingredient is used; if Monday's rice is absent, a different prepared
-carbohydrate is traced. It is a demonstration, not target optimisation.
+`meal_plan_calc.demo_data.build_demo()` loads and validates the current data and calls the production nutrition and shopping functions. The scenario is calculated from a deep copy without modifying the input files. It uses oats and Monday's rice when present, or other suitable ingredients otherwise.
 
-Category fractions and the repeating schedule come from `planning.py`. Prepared
-and eaten shopping totals agree over a complete cycle but may differ over a
-partial cycle because consumption includes earlier batches. Full quantities for
-each period are recorded even when only selected rows appear in the film.
+The recorder retains full-precision `Decimal` values (as strings) and SHA-256 checksums in `docs/media/demo-data.json`. Floating point is used only for plotting; displayed values are rounded. The renderer does not implement a separate nutrition engine or an optimisation algorithm.
 
-The food records' original raw/cooked states are retained. These are arithmetic
-results from supplied records, not verified food labels or purchase weights.
-Supplement units remain unresolved in the source dataset; the film states this
-and does not present supplement counts as shopping recommendations. There is no
-yield conversion, pack rounding, stock tracking or implemented optimisation.
+Category allocation follows `planning.py`. Prepared and eaten quantities agree across a complete schedule cycle but can differ for partial periods. Raw/cooked units are preserved; cooking-yield conversion, stock, packaging and supplement-unit verification are not implemented.
 
-## Validation
+## Validate
 
 ```bash
 uv run --locked pytest
 uv run --locked ruff check .
 uv run --locked ruff format --check .
+uv run --locked --extra demo python scripts/render_demo.py --stills-only --output-dir /tmp/meal-demo-stills
 ffmpeg -v error -i docs/media/demo.mp4 -f null -
 ffmpeg -v error -i docs/media/preview.gif -f null -
 ```
 
-The original video and GIF were validated by full FFmpeg decoding. The shorter
-preview is the verified eight-second excerpt of that same video. Current tests
-check CLI agreement, dynamic input changes, allocation conservation, full-cycle
-shopping, fortnight scaling and source-file isolation. Regeneration can be
-checked without encoding using the still-frame command above. The calculation JSON is
-deterministic; video bytes can differ with FFmpeg or font versions.
+The test suite checks changes to source ingredients, quantities and nutrient values, as well as source-file isolation, shopping conservation and CLI agreement. The still-frame command verifies rendering paths without generating a new MP4.
+
+**When updating the media:** regenerate and commit the MP4, GIF and data recording together. The README's MP4 link is pinned to a media commit; update it when the MP4 changes. Media bytes may vary with FFmpeg and font versions.
