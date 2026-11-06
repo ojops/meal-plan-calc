@@ -1,4 +1,4 @@
-"""Build presentation data by calling the existing Decimal-based calculator."""
+"""Build reproducible presentation data from the current validated meal plan."""
 
 import hashlib
 from copy import deepcopy
@@ -18,11 +18,7 @@ from meal_plan_calc.validation import load_json, validate_data
 
 
 def build_demo(data_dir: Path) -> dict:
-    """Calculate the supplied week and an isolated 75 g to 100 g oats scenario.
-
-    Preserve Decimal values until JSON serialization; never edit the source plan.
-    Shopping quantities retain each food's recorded raw/cooked state.
-    """
+    """Recalculate an isolated +25 g breakfast scenario using current inputs."""
     foods = load_json(data_dir / "foods.json")
     meals = load_json(data_dir / "meals.json")
     validate_data(foods, meals)
@@ -35,10 +31,18 @@ def build_demo(data_dir: Path) -> dict:
             for day in DAYS
         }
 
+    ingredient = "oats" if "oats" in meals["breakfast"] else next(
+        iter(meals["breakfast"]), None
+    )
+    if ingredient is None:
+        raise ValueError("The demonstration requires a nonempty breakfast")
+    before = Decimal(str(meals["breakfast"][ingredient]))
+    after = before + Decimal("25")
     altered = deepcopy(meals)
-    altered["breakfast"]["oats"] = Decimal("100")
+    altered["breakfast"][ingredient] = after
     validate_data(foods, altered)
     baseline, scenario = week(meals), week(altered)
+
     shopping = {}
     for length in (3, 7, 14):
         selected = [DAYS[i % len(DAYS)] for i in range(length)]
@@ -49,7 +53,29 @@ def build_demo(data_dir: Path) -> dict:
             ),
         }
 
-    rice = {"rice": meals["monday"]["rice"]}
+    day = "monday"
+    if "rice" in meals[day]:
+        batch_ingredient = "rice"
+    else:
+        candidates = [
+            (candidate_day, name)
+            for candidate_day in DAYS
+            for name in meals[candidate_day]
+            if foods[name]["category"] == "carb"
+        ]
+        if not candidates:
+            raise ValueError("The demonstration needs a prepared carbohydrate")
+        day, batch_ingredient = candidates[0]
+    category = foods[batch_ingredient]["category"]
+    fraction = CATEGORIES_SPLIT.get(category, Decimal(1))
+    quantity = Decimal(str(meals[day][batch_ingredient]))
+    batch = {batch_ingredient: quantity}
+    day_index = DAYS.index(day)
+    prepared_week = shopping["7"]["prepared"]
+    preferred = ("oats", "rice", "chicken", "broccoli")
+    displayed = [name for name in preferred if name in prepared_week]
+    displayed.extend(name for name in prepared_week if name not in displayed)
+
     return {
         "input_sha256": {
             name: hashlib.sha256((data_dir / name).read_bytes()).hexdigest()
@@ -58,34 +84,37 @@ def build_demo(data_dir: Path) -> dict:
         "days": DAYS,
         "daily": baseline,
         "scenario": {
-            "ingredient": "oats",
-            "before_g": Decimal(str(meals["breakfast"]["oats"])),
-            "after_g": Decimal("100"),
+            "ingredient": ingredient,
+            "before_g": before,
+            "after_g": after,
             "daily": scenario,
             "monday_delta": {
                 key: scenario["monday"][key] - value
                 for key, value in baseline["monday"].items()
             },
         },
-        "oats": {
-            "per_100g": foods["oats"],
+        "example": {
+            "per_100g": foods[ingredient],
             "breakfast_contribution": calculate_meal_nutrition(
-                {"oats": meals["breakfast"]["oats"]}, foods
+                {ingredient: before}, foods
             ),
         },
-        "rice_allocation": {
-            "prepared_g": Decimal(str(rice["rice"])),
-            "lunch_fraction": CATEGORIES_SPLIT["carb"],
-            "lunch_g": Decimal(str(rice["rice"])) * CATEGORIES_SPLIT["carb"],
-            "dinner_g": Decimal(str(rice["rice"])) * (1 - CATEGORIES_SPLIT["carb"]),
-            "lunch": calculate_meal_nutrition(
-                rice, foods, {"carb": CATEGORIES_SPLIT["carb"]}
-            ),
+        "batch_allocation": {
+            "ingredient": batch_ingredient,
+            "prepared_day": day,
+            "lunch_day": DAYS[(day_index + 1) % len(DAYS)],
+            "dinner_day": DAYS[(day_index + 2) % len(DAYS)],
+            "prepared_g": quantity,
+            "lunch_fraction": fraction,
+            "lunch_g": quantity * fraction,
+            "dinner_g": quantity * (1 - fraction),
+            "lunch": calculate_meal_nutrition(batch, foods, {category: fraction}),
             "dinner": calculate_meal_nutrition(
-                rice, foods, {"carb": 1 - CATEGORIES_SPLIT["carb"]}
+                batch, foods, {category: 1 - fraction}
             ),
         },
         "shopping": shopping,
+        "display_ingredients": displayed[:4],
         "units": {name: foods[name].get("state", "unspecified") for name in foods},
-        "note": "Recorded food data; supplement units unverified; no yield or pack conversion.",
+        "note": "Current records; supplement units unverified; no yield or pack conversion.",
     }

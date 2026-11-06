@@ -1,9 +1,8 @@
 # Reproducing the portfolio demonstration
 
 `media/demo.mp4` is a 36-second silent film, 1920 × 1080 at 30 FPS,
-encoded as H.264/yuv420p with fast-start metadata. `media/demo.gif` shows
-the entire 36-second film at its original pace, at 768 × 432 and 10 FPS,
-looping directly in the README. There is no shortened excerpt.
+encoded as H.264/yuv420p with fast-start metadata. `media/preview.gif` loops the opening eight seconds at 768 × 432 and 10 FPS.
+The full-length MP4 remains available from the README.
 
 Both media files are tracked in Git. The animation uses a relative link;
 the MP4 link uses a raw GitHub URL pinned to its media commit to avoid
@@ -47,17 +46,20 @@ in `media/demo-data.json`.
 
 | Time | Demonstration and recorded example |
 | --- | --- |
-| 0–8 s | Seven daily results; Monday 2,399.67 kcal and 136.79 g protein |
-| 8–17 s | Monday's 161 g raw rice allocates 120.75 g to Tuesday lunch and 40.25 g to Wednesday dinner |
-| 17–26 s | A copied plan changes breakfast oats from 75 g to 100 g; each day gains 93.50 kcal and 2.75 g protein |
-| 26–36 s | Prepared shopping for 3, 7 and 14 days, plus prepared/eaten comparison over a partial cycle |
+| 0–8 s | Current seven-day nutrition totals and a breakfast ingredient contribution |
+| 8–17 s | Trace a recorded carbohydrate batch into later lunch/dinner servings |
+| 17–26 s | Increase a breakfast ingredient by 25 g in an isolated copy and recalculate |
+| 26–36 s | Compare current 3-, 7- and 14-day prepared/eaten shopping totals |
 
-The scenario never writes to the source plan. It is an explicitly chosen input
-change, not target optimisation. Category fractions and the repeating schedule
-come from `planning.py`. Seven-day rice totals are 613 g on both bases; the
-three-day totals differ (271 g prepared and 269.75 g eaten) because consumption
-includes earlier batches. All ingredient quantities for every period are saved,
-even when the film only displays selected rows.
+The scenario derives baseline amounts and nutrient differences from the current
+input files without modifying the saved plan. If oats are absent, another
+breakfast ingredient is used; if Monday's rice is absent, a different prepared
+carbohydrate is traced. It is a demonstration, not target optimisation.
+
+Category fractions and the repeating schedule come from `planning.py`. Prepared
+and eaten shopping totals agree over a complete cycle but may differ over a
+partial cycle because consumption includes earlier batches. Full quantities for
+each period are recorded even when only selected rows appear in the film.
 
 The food records' original raw/cooked states are retained. These are arithmetic
 results from supplied records, not verified food labels or purchase weights.
@@ -72,12 +74,12 @@ uv run --locked pytest
 uv run --locked ruff check .
 uv run --locked ruff format --check .
 ffmpeg -v error -i docs/media/demo.mp4 -f null -
-ffmpeg -v error -i docs/media/demo.gif -f null -
+ffmpeg -v error -i docs/media/preview.gif -f null -
 ```
 
-The completed run passed 29 tests, Ruff lint and formatting. Recording tests
-check the CLI's displayed daily totals, independent expected oats deltas,
-allocation conservation, full-cycle prepared/eaten equality, fortnight scaling
-and source-file isolation. Representative encoded frames were inspected across
-all chapters for readability, units and clipping. The calculation JSON is
+The original video and GIF were validated by full FFmpeg decoding. The shorter
+preview is the verified eight-second excerpt of that same video. Current tests
+check CLI agreement, dynamic input changes, allocation conservation, full-cycle
+shopping, fortnight scaling and source-file isolation. Regeneration can be
+checked without encoding using the still-frame command above. The calculation JSON is
 deterministic; video bytes can differ with FFmpeg or font versions.

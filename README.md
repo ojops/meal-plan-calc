@@ -1,42 +1,24 @@
 # Meal Plan Calculator
 
-A Python project for calculating daily nutritional intake and shopping quantities from a meal plan, with the longer term aim of adjusting food quantities to meet nutrition targets with minimal excess.
+A Python project for nutritional calculations and shopping quantities from a configurable, repeating meal plan.
 
-[![Calculated weekly nutrition from the supplied meal plan](docs/media/demo.gif)](https://raw.githubusercontent.com/ojops/meal-plan-calc/45d36fb767beec954759e319df599bb409524fab/docs/media/demo.mp4)
+[![Eight-second looping preview of calculated weekly nutrition](docs/media/preview.gif)](https://raw.githubusercontent.com/ojops/meal-plan-calc/45d36fb767beec954759e319df599bb409524fab/docs/media/demo.mp4)
 
-**[Open or download the full MP4 — 36 seconds, 1080p](https://raw.githubusercontent.com/ojops/meal-plan-calc/45d36fb767beec954759e319df599bb409524fab/docs/media/demo.mp4).**
-Trace a rice batch across days, change the oats input, and compare shopping
-periods using the real Decimal calculations. Quantities retain the food records'
-raw/cooked states; supplement units still need verification.
-[Recorded results](docs/media/demo-data.json) · [Regenerate the video](docs/DEMO.md).
-
-The animation above plays the complete demonstration. Click it to open or download the 1080p MP4.
-
-## Overview
-
-The calculator uses food composition data and meal quantities stored in JSON. It accounts for a repeating cooking schedule and the allocation of prepared food between lunch and dinner. Development is progressing from nutritional calculations towards target comparisons and practical optimisation.
+*Eight-second preview. [Watch the full 36-second demonstration (MP4)](https://raw.githubusercontent.com/ojops/meal-plan-calc/45d36fb767beec954759e319df599bb409524fab/docs/media/demo.mp4) · [Regenerate with current data](docs/DEMO.md).*
 
 ## Features
 
-- Nutritional totals for individual meals and daily intake
-- Tracking of calories, fat, saturates, carbohydrates, sugars, fibre, protein, and salt
-- Configurable food data, meal quantities, and exercise schedule
-- Shopping quantities for weekly, twice weekly, or fortnightly periods
-- Separate reports for ingredients prepared or eaten during a period
-- Input validation and automated calculation tests
+- Calculate calories, fat, saturates, carbohydrates, sugars, fibre, protein and salt
+- Configure food data, daily meals and exercise schedules in JSON
+- Allocate prepared meals between subsequent lunches and dinners
+- Generate 3-, 7- and 14-day ingredient totals on a **prepared** or **eaten** basis
+- Validate inputs and calculate with Python `Decimal` arithmetic
 
-Optimisation and nutrition targets are planned (neither is implemented yet).
+Nutritional targets and meal-plan **optimisation are planned, not implemented**.
 
-## Requirements
+## Requirements and installation
 
-- Python 3.10
-- [uv](https://docs.astral.sh/uv/)
-
-The following instructions assume Ubuntu or WSL running Ubuntu.
-
-## Installation
-
-Clone the repository and install its dependencies:
+Python 3.10 and [uv](https://docs.astral.sh/uv/); commands below target Ubuntu/WSL.
 
 ```bash
 git clone https://github.com/ojops/meal-plan-calc.git
@@ -46,82 +28,27 @@ uv sync --locked
 
 ## Usage
 
-Run the calculator from the repository root:
-
 ```bash
 uv run meal-plan-calc
-```
-
-By default, it prints daily nutrition and a shopping list for one week. The module command also works: `uv run python -m meal_plan_calc`.
-
-Choose a report and period without editing the source:
-
-```bash
-# Daily nutrition only
 uv run meal-plan-calc --report nutrition
-
-# A fortnight's shopping
 uv run meal-plan-calc --days 14 --report shopping
-
-# Two shopping periods: Monday–Wednesday and Thursday–Sunday
 uv run meal-plan-calc --start-day monday --days 3 --report shopping
 uv run meal-plan-calc --start-day thursday --days 4 --report shopping
 ```
 
-Shopping defaults to ingredients prepared during the selected days. Use `--shopping-basis eaten` for quantities consumed instead (includes food from earlier cooking days). Neither report accounts for existing stock or pack sizes.
-
-Edit `data/foods.json` and `data/meals.json` to change the supplied plan. Use `--foods`, `--meals` or `--schedule` to select alternate JSON files, and `uv run meal-plan-calc --help` lists all options.
+The default reports a week of nutrition and prepared shopping. Use `--shopping-basis eaten` to count consumption, including earlier batches. Edit `data/foods.json` and `data/meals.json`, or supply alternatives with `--foods`, `--meals` and `--schedule`. See `uv run meal-plan-calc --help`.
 
 ## Calculation assumptions
 
-Lunch uses the previous day's cooking and dinner uses cooking from two days earlier, wrapping around the schedule. Category fractions define the lunch share, with dinner receiving the remainder.
+Lunch uses yesterday's batch; dinner uses the batch from two days earlier. Category-specific fractions determine the split. Nutrients are specified per 100 g in the recorded **raw or cooked state**, without yield or purchase-pack conversion. Supplement tablet/capsule units need verification.
 
-Nutrients are recorded per 100g. Quantities use the food record's raw or cooked state, with no conversion to purchase weights. Some supplement quantities appear to be tablet or capsule counts but are displayed as grams, these units still need to be resolved. Results depend on the accuracy of the supplied food data.
+The core calculation lives in `src/meal_plan_calc/nutrition.py`, `planning.py` and `shopping.py`. See [calculation notes](docs/CALCULATIONS.md) for formulas and limitations.
 
-See [calculation notes](docs/CALCULATIONS.md) for allocation, units, and custom schedule details.
+## Roadmap
 
-## Development Roadmap
-
-- **Data and units:** Verify food sources and distinguish grams, tablet counts and purchase weights.
-- **Nutrition targets:** Define daily targets and acceptable tolerances.
-- **Comparisons:** Show how the current meal plan differs from those targets.
-- **Optimisation:** Adjust ingredient quantities to reduce target deviations and unnecessary excess.
-- **Constraints:** Support portion limits, food preferences, and practical meal preparation.
-- **Evaluation:** Compare proposed plans with the existing plan for accuracy and practicality.
-
-## Project Structure
-
-```text
-meal-plan-calc/
-├── .github/
-│   └── workflows/
-│       └── checks.yml     # Automated tests and code checks
-├── data/
-│   ├── foods.json         # Food composition data
-│   └── meals.json         # Meal quantities
-├── docs/
-│   ├── CALCULATIONS.md    # Calculation assumptions, units, and schedules
-│   └── STYLE.md           # Coding conventions
-├── src/
-│   └── meal_plan_calc/
-│       ├── __init__.py
-│       ├── __main__.py    # Supports python -m meal_plan_calc
-│       ├── main.py        # Terminal arguments and report output
-│       ├── nutrition.py   # Nutritional calculations
-│       ├── planning.py    # Schedule defaults and meal allocation
-│       ├── shopping.py    # Prepared and eaten ingredient quantities
-│       └── validation.py  # JSON loading and input checks
-├── tests/                 # Automated calculation and validation tests
-├── pyproject.toml         # Project configuration and dependencies
-├── uv.lock                # Locked dependency versions
-├── .gitignore
-├── LICENSE
-└── README.md
-```
+Verify ingredient units and sources, introduce nutritional targets and deviations, then implement constrained optimisation.
 
 ## Development
-
-Run the tests and code checks:
 
 ```bash
 uv run pytest
@@ -129,8 +56,4 @@ uv run ruff check .
 uv run ruff format --check .
 ```
 
-Add dependencies with `uv add package-name` and commit both `pyproject.toml` and `uv.lock` when they change. GitHub Actions runs the checks on pushes and pull requests. See [coding conventions](docs/STYLE.md).
-
-## License
-
-MIT licensed. See [LICENSE](LICENSE).
+GitHub Actions runs automated checks. See [coding conventions](docs/STYLE.md). Licensed under [MIT](LICENSE).

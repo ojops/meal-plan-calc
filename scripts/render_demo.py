@@ -55,14 +55,16 @@ def frame(t, data):
         panel(draw, (80, 250, 1210, 747))
         label(draw, 120, 282, "Daily intake · kcal")
         growth = 0.55 + 0.45 * ease(t / 2)
-        for value in (0, 1000, 2000, 3000):
-            y = 650 - value / 3000 * 270
+        highest = max(float(data["daily"][day]["calories"]) for day in data["days"])
+        ceiling = max(500, ((highest + 499) // 500) * 500)
+        for value in (0, ceiling / 3, ceiling * 2 / 3, ceiling):
+            y = 650 - value / ceiling * 270
             draw.line((180, y, 1160, y), fill=GRID, width=1)
-            text(draw, (160, y), str(value), 20, MUTED, mono=True, anchor="rm")
+            text(draw, (160, y), f"{value:,.0f}", 20, MUTED, mono=True, anchor="rm")
         for i, day in enumerate(data["days"]):
             value = float(data["daily"][day]["calories"])
             x = 205 + i * 137
-            top = 650 - value / 3000 * 270 * growth
+            top = 650 - value / ceiling * 270 * growth
             draw.rounded_rectangle(
                 (x, top, x + 74, 650), radius=8, fill=TEAL if i == 0 else BLUE
             )
@@ -94,10 +96,10 @@ def frame(t, data):
                 draw, (1800, y), f"{daily[key]:.2f} g", 28, INK, mono=True, anchor="rt"
             )
         panel(draw, (80, 777, 1210, 917))
-        label(draw, 120, 801, "One contribution · breakfast oats")
+        label(draw, 120, 801, f"One contribution · {data['scenario']['ingredient']}")
         amount = data["scenario"]["before_g"]
-        per_100 = data["oats"]["per_100g"]["calories"]
-        contribution = data["oats"]["breakfast_contribution"]["calories"]
+        per_100 = data["example"]["per_100g"]["calories"]
+        contribution = data["example"]["breakfast_contribution"]["calories"]
         text(
             draw,
             (120, 847),
@@ -107,28 +109,28 @@ def frame(t, data):
             mono=True,
         )
     elif section == 1:
-        rice = data["rice_allocation"]
+        rice = data["batch_allocation"]
         label(draw, 80, 260, "One ingredient traced through the repeating schedule")
         cards = [
             (
                 80,
-                "MONDAY / PREPARE",
+                f"{rice['prepared_day'].upper()} / PREPARE",
                 f"{rice['prepared_g']} g",
-                "raw rice in the cooked batch",
+                f"{rice['ingredient']} in prepared batch",
                 BLUE,
             ),
             (
                 690,
-                "TUESDAY / LUNCH",
+                f"{rice['lunch_day'].upper()} / LUNCH",
                 f"{rice['lunch_g']:.2f} g",
-                "75% of Monday’s rice",
+                f"{rice['lunch_fraction']:.0%} of prepared {rice['ingredient']}",
                 TEAL,
             ),
             (
                 1300,
-                "WEDNESDAY / DINNER",
+                f"{rice['dinner_day'].upper()} / DINNER",
                 f"{rice['dinner_g']:.2f} g",
-                "remaining 25%",
+                f"remaining {1 - rice['lunch_fraction']:.0%}",
                 AMBER,
             ),
         ]
@@ -176,17 +178,17 @@ def frame(t, data):
         changed = t >= 19
         panel(draw, (80, 250, 720, 917))
         label(draw, 120, 290, "Isolated example · breakfast")
-        text(draw, (120, 356), '"oats":', 38, MUTED, mono=True)
+        text(draw, (120, 356), f'"{scenario["ingredient"]}":', 38, MUTED, mono=True)
         text(
             draw,
             (360, 346),
-            '"100"' if changed else '"75"',
+            f'"{scenario["after_g"]}"' if changed else f'"{scenario["before_g"]}"',
             60,
             TEAL,
             mono=True,
             bold=True,
         )
-        text(draw, (120, 450), "75 g → 100 g", 44, TEAL)
+        text(draw, (120, 450), f'{scenario["before_g"]} g → {scenario["after_g"]} g', 40, TEAL)
         text(draw, (120, 525), "The saved source plan is unchanged.", 26, MUTED)
         label(draw, 120, 628, "Every day gains")
         metric(
@@ -194,14 +196,14 @@ def frame(t, data):
             120,
             682,
             f"+{scenario['monday_delta']['calories']:.2f}",
-            "kcal from 25 g more oats",
+            f'kcal from {scenario["after_g"] - scenario["before_g"]} g more {scenario["ingredient"]}',
             TEAL,
         )
         text(draw, (120, 842), "Scenario analysis; no optimisation.", 25, AMBER)
         panel(draw, (760, 250, 1840, 917))
         label(draw, 800, 290, "Monday · full day recalculated")
-        text(draw, (1170, 350), "75 g oats", 25, MUTED, anchor="rt")
-        text(draw, (1500, 350), "100 g oats", 25, TEAL, anchor="rt")
+        text(draw, (1170, 350), f'{scenario["before_g"]} g {scenario["ingredient"]}', 25, MUTED, anchor="rt")
+        text(draw, (1500, 350), f'{scenario["after_g"]} g {scenario["ingredient"]}', 25, TEAL, anchor="rt")
         text(draw, (1800, 350), "Change", 25, MUTED, anchor="rt")
         for i, (key, caption, unit) in enumerate(
             [
@@ -241,7 +243,7 @@ def frame(t, data):
         text(draw, (120, 340), "Ingredient / recorded state", 22, MUTED)
         for x, length in [(680, 3), (900, 7), (1160, 14)]:
             text(draw, (x, 340), f"{length} days", 24, TEAL, anchor="rt")
-        for i, ingredient in enumerate(["oats", "rice", "chicken", "broccoli"]):
+        for i, ingredient in enumerate(data["display_ingredients"]):
             y = 420 + i * 97
             text(draw, (120, y), ingredient.title(), 28)
             text(draw, (340, y + 4), data["units"][ingredient], 23, MUTED)
@@ -266,13 +268,14 @@ def frame(t, data):
         )
         panel(draw, (1250, 250, 1840, 917))
         label(draw, 1290, 290, "Prepared ≠ eaten · partial week")
-        text(draw, (1290, 355), "Rice / Monday–Wednesday", 29)
+        tracked = data["batch_allocation"]["ingredient"]
+        text(draw, (1290, 355), f"{tracked.title()} / Monday–Wednesday", 29)
         amounts = data["shopping"]["3"]
         metric(
             draw,
             1290,
             430,
-            f"{amounts['prepared']['rice']:.2f} g",
+            f"{amounts['prepared'].get(tracked, 0):.2f} g",
             "prepared during those three days",
             BLUE,
             size=46,
@@ -281,14 +284,14 @@ def frame(t, data):
             draw,
             1290,
             585,
-            f"{amounts['eaten']['rice']:.2f} g",
+            f"{amounts['eaten'].get(tracked, 0):.2f} g",
             "eaten, including earlier batches",
             AMBER,
             size=46,
         )
         text(draw, (1290, 760), "Over the full 7-day cycle:", 26, MUTED)
-        weekly = data["shopping"]["7"]["prepared"]["rice"]
-        text(draw, (1290, 805), f"both total {weekly:.2f} g of rice.", 28, TEAL)
+        weekly = data["shopping"]["7"]["prepared"][tracked]
+        text(draw, (1290, 805), f"both total {weekly:.2f} g of {tracked}.", 28, TEAL)
     return image
 
 
@@ -305,7 +308,7 @@ def main():
             frame(t, data).save(args.output_dir / f"frame-{t}.png")
         return
     encode(lambda t: frame(t, data), args.output_dir / "demo.mp4", DURATION)
-    preview(args.output_dir / "demo.mp4", args.output_dir / "demo.gif", 0, DURATION)
+    preview(args.output_dir / "demo.mp4", args.output_dir / "preview.gif", 0, 8)
 
 
 if __name__ == "__main__":
