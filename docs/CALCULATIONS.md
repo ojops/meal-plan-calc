@@ -1,30 +1,39 @@
 # Calculation notes
 
-## Nutrients and precision
+This document explains how nutrient totals and shopping quantities are derived. See the [README](../README.md) for commands and installation.
 
-An ingredient contributes `nutrient_per_100g × quantity × allocated_fraction / 100`. Meal totals sum these contributions. Saturates are included in fat, sugars in carbohydrates, and fibre is separate.
+## Nutrition and precision
 
-Calculations use `Decimal`. JSON decimal numbers are loaded directly as decimals, numeric strings are also accepted. Fractions such as 2/3 have finite precision. Only output is rounded, to two decimal places using half even rounding.
+For each ingredient and nutrient:
 
-## Meal allocation and shopping
+```text
+contribution = nutrient_per_100g × quantity × allocation_fraction / 100
+```
 
-The schedule repeats: lunch uses the previous day's batch and dinner uses the batch from two days earlier. Category fractions specify the lunch share, with the remainder assigned to dinner. A category missing from the split currently goes entirely to lunch.
+Meal and day totals sum those contributions. Saturated fat is included in total fat; sugars are included in carbohydrates; fibre is tracked separately.
 
-- **Prepared:** Batches cooked on the selected days plus those days' breakfast,
-  snack, supplement, and exercise meals.
-- **Eaten:** Ingredients consumed on those days, including earlier batches.
+All calculations use `Decimal`. JSON decimal values and numeric strings are accepted; output alone is rounded to two decimal places using round-half-even. Repeating fractions (such as 2/3) use `Decimal` precision.
 
-Both totals agree over a complete schedule cycle, allowing Decimal rounding. Tests check this for quantities and nutrients (they do not verify food labels).
+## Repeating schedule
 
-## Data and units
+Lunch consumes the previous day's cooking and dinner consumes cooking from two days earlier, with wraparound at the end of the schedule. For each food category, the configured fraction goes to lunch and the remainder to dinner. Categories without a configured fraction default to **100% lunch**.
 
-Food records require a category and all eight nutrients. Validation rejects unknown ingredients, missing nutrients, duplicate JSON keys, non finite or negative numbers, fractions outside [0, 1], sugars above carbohydrates, and saturates above fat. The datas meals `comments` entry is metadata, it does not control whether an ingredient is included.
+Shopping reports use two different bases:
 
-Quantities are treated as grams in each food's recorded raw/cooked state. There is no yield conversion, stock tracking, or pack rounding. Food sources, state labels and tablet/capsule units still need verification before shopping totals can be treated as purchase quantities.
+- **Prepared:** cooking batches and the breakfast, snack, supplement and exercise meals scheduled during the selected days.
+- **Eaten:** food consumed during those days, including portions prepared before the selected period.
 
-## Custom schedules
+Over a complete repeating cycle, prepared and eaten quantities agree. Shorter periods can differ because cooking and consumption fall on different days.
 
-Pass `--schedule schedule.json` with this structure:
+## Input validation and units
+
+Food records must contain a category and all eight nutrients. Validation rejects unknown ingredients, duplicate JSON keys, missing nutrient values, invalid or negative numbers, invalid allocation fractions, sugars greater than carbohydrates, and saturates greater than total fat. The `comments` entry in `data/meals.json` is metadata, not a meal.
+
+Quantities are treated as grams in the food record's stated **raw or cooked state**. The calculator does **not** convert cooking yields, track stock or round to package sizes. Check food sources, state labels and supplement tablet/capsule units before using the shopping totals as purchasing instructions.
+
+## Custom schedule
+
+Use `--schedule schedule.json` with, for example:
 
 ```json
 {
@@ -34,4 +43,4 @@ Pass `--schedule schedule.json` with this structure:
 }
 ```
 
-These fractions are examples. Day names must be distinct and match cooking entries in the meals file, exercise names must also match meal entries. `breakfast`, `snack`, and `supplements` are required but may be empty. `--start-day` must belong to the schedule, and `--days` must be positive.
+These are illustrative fractions. Schedule days must be distinct and have matching cooking and exercise meals. `breakfast`, `snack` and `supplements` are also required (and may be empty). `--start-day` must belong to the schedule, and `--days` must be positive.
