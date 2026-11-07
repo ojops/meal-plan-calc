@@ -46,9 +46,13 @@ Lunch uses the previous day's batch; dinner uses the batch from two days earlier
 
 The main calculations are in `src/meal_plan_calc/nutrition.py`, `planning.py` and `shopping.py`. See [calculation notes](docs/CALCULATIONS.md) for formulas and schedule rules.
 
-## Next steps
+## Planned roadmap
 
-Verify input units and sources, introduce nutrition targets and deviations, then develop constrained ingredient optimisation.
+- **Validate inputs:** audit nutrient sources, raw versus cooked weights and supplement units before using the totals to assess a diet.
+- **Introduce configurable targets:** support energy and nutrient goals by day or exercise type, with absolute and percentage deviations from actual daily totals.
+- **Make reports evaluative:** identify which meals and ingredients contribute most to target shortfalls or excesses, and compare proposed portion changes.
+- **Optimise ingredient quantities:** minimise deviations from selected targets within user-defined portion, ingredient and meal-plan constraints.
+- **Improve shopping accuracy:** add optional cooking-yield and purchase-pack conversions while keeping prepared and eaten quantities distinct.
 
 ## Development
 
