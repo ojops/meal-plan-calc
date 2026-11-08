@@ -31,6 +31,32 @@ Food records must contain a category and all eight nutrients. Validation rejects
 
 Quantities are treated as grams in the food record's stated **raw or cooked state**. The calculator does **not** convert cooking yields, track stock or round to package sizes. Check food sources, state labels and supplement tablet/capsule units before using the shopping totals as purchasing instructions.
 
+### Specific uncertainties in the supplied example
+
+These observations come from the repository's records, not verified current
+product labels. The example is not an audited dietary assessment:
+
+- `vitamin_d3_and_k2`, `zinc`, `omega_3` and `magnesium_glycinate` each have a
+  quantity of `1` and zero for all eight tracked nutrients. The program interprets
+  each quantity as **1 g**, not one tablet/capsule. Their recorded zero contribution
+  is not evidence that the products contain no energy, fat or other nutrients;
+  the oil product in particular needs its label checked. Vitamin/mineral content
+  is outside the eight tracked nutrients.
+- `quinoa` and `grains` have product names containing “Simply Cooked” but are
+  labelled `state: raw`. Verify whether their quantities and per-100-g values
+  refer to the prepared product. State labels are displayed, not converted, so
+  changing a label alone would not establish the correct weight basis.
+- The `run` meal always includes 4.3 g of `electrolytes_tablet` and 6 g of
+  `electrolytes_powder`. Their recorded salt values contribute **0.8256 g +
+  0.7800 g = 1.6056 g salt** on each run day. The powder's nutrition is explicitly
+  marked as an estimate. A comment in `meals.json` says the powder is conditional,
+  but comments do not implement conditions: edit the meal/schedule when it is
+  not consumed.
+
+Before relying on target statuses or shopping weights, audit the exact products,
+serving masses, nutrient-label basis and raw/cooked states. No values or portions
+have been guessed or changed to resolve these uncertainties.
+
 ## Custom schedule
 
 Use `--schedule schedule.json` with, for example:
