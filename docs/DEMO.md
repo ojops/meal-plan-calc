@@ -2,7 +2,7 @@
 
 The README embeds an **eight-second looping GIF** (`docs/media/preview.gif`) linked to the complete **36-second, silent 1080p MP4** (`docs/media/demo.mp4`).
 
-The committed media shows a **snapshot** of the supplied meal plan when the video was produced. Regenerating the video uses the **current** `data/foods.json` and `data/meals.json`; changing those files does not retroactively update the committed MP4 or GIF.
+The committed media shows a **snapshot** of the supplied meal plan when the video was produced. Optional targets and contribution reports are additional CLI features; the film continues to demonstrate the original calculations and does not assess dietary targets. Regenerating the video uses the **current** `data/foods.json` and `data/meals.json`; changing those files does not retroactively update the committed MP4 or GIF.
 
 ## Generate
 
