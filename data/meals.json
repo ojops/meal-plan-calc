@@ -1,7 +1,6 @@
 {
     "comments": {
-        "general": "these aren't accounted for in code:",
-        "electrolytes_powder": "only if realy sweaty"
+        "electrolytes_powder": "Optional: select days with --sweaty or schedule electrolytes_days. Quantity is in extra_electrolytes."
     },
 
     "snack": {
@@ -25,10 +24,13 @@
         "electrolytes_tablet": "4.3",
         "collagen": "15",
         "kiwi": "70",
-        "electrolytes_powder": "6",
         "milk": "200",
         "kefir": "95",
         "egg": "70"
+    },
+
+    "extra_electrolytes": {
+        "electrolytes_powder": "6"
     },
 
     "strength": {

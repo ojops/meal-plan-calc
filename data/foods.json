@@ -89,7 +89,7 @@
     "quinoa": {
         "category": "carb",
         "instore_name": "Merchant Gourmet Simply Cooked Red & White Quinoa 250g",
-        "state": "raw",
+        "state": "cooked",
         "calories": "184",
         "fat": "3.2",
         "saturates": "0.4",
@@ -103,7 +103,7 @@
     "grains": {
         "category": "carb",
         "instore_name": "Merchant Gourmet Simply Cooked Glorious Grains with Red Rice & Quinoa 250g",
-        "state": "raw",
+        "state": "cooked",
         "calories": "182",
         "fat": "2.8",
         "saturates": "0.5",

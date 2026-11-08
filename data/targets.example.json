@@ -1,0 +1,13 @@
+{
+  "default": {
+    "calories": {"value": "2400", "mode": "aim", "tolerance": "100"},
+    "protein": {"value": "120", "mode": "minimum"},
+    "fibre": {"value": "30", "mode": "minimum"},
+    "salt": {"value": "6", "mode": "maximum"}
+  },
+  "exercise": {
+    "run": {
+      "calories": {"value": "2600", "mode": "aim", "tolerance": "100"}
+    }
+  }
+}
