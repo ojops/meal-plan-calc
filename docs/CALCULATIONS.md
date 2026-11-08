@@ -42,20 +42,47 @@ product labels. The example is not an audited dietary assessment:
   is not evidence that the products contain no energy, fat or other nutrients;
   the oil product in particular needs its label checked. Vitamin/mineral content
   is outside the eight tracked nutrients.
-- `quinoa` and `grains` have product names containing “Simply Cooked” but are
-  labelled `state: raw`. Verify whether their quantities and per-100-g values
-  refer to the prepared product. State labels are displayed, not converted, so
-  changing a label alone would not establish the correct weight basis.
-- The `run` meal always includes 4.3 g of `electrolytes_tablet` and 6 g of
-  `electrolytes_powder`. Their recorded salt values contribute **0.8256 g +
-  0.7800 g = 1.6056 g salt** on each run day. The powder's nutrition is explicitly
-  marked as an estimate. A comment in `meals.json` says the powder is conditional,
-  but comments do not implement conditions: edit the meal/schedule when it is
-  not consumed.
+- `quinoa` and `grains` are now labelled `state: cooked`, matching the intended
+  “Simply Cooked” products. Quantities refer to cooked product weights. Their
+  nutrient values and portion quantities are unchanged; this corrects the state
+  metadata, without performing a cooking-yield conversion or verifying labels.
+- The `run` meal includes 4.3 g of `electrolytes_tablet`, contributing **0.8256 g
+  salt**. Additional powder is now optional (see below). Its 6 g portion adds
+  **0.7800 g salt**, making **1.6056 g** from tablet plus powder on a selected run
+  day. The powder's nutrition remains explicitly marked as an estimate.
 
 Before relying on target statuses or shopping weights, audit the exact products,
 serving masses, nutrient-label basis and raw/cooked states. No values or portions
-have been guessed or changed to resolve these uncertainties.
+have been guessed to resolve these uncertainties.
+
+## Optional electrolyte powder
+
+The supplied `run` meal no longer includes powder. The separate
+`extra_electrolytes` meal contains `electrolytes_powder: "6"` (grams) and is
+included only on selected days. The tablet remains in the run meal.
+
+Use `--electrolytes-day tuesday`, repeating the option for additional days, or
+save an `electrolytes_days` list in a schedule file. Omission means no extra
+powder. CLI selections replace the saved list; `--no-extra-electrolytes` overrides
+it with no selected days. These two CLI options cannot be combined.
+
+Day names must belong to the repeating schedule. Each selected day receives one
+portion per occurrence in the report, even across multiple cycles; duplicate
+names do not add extra portions. Days outside the reporting window add nothing.
+Selection is allowed on non-run days too, without changing the day's exercise
+type or its target overrides. To select a single occurrence, report that date's
+schedule day with `--days 1`; this calculator does not model calendar dates.
+
+The extra meal is consumed directly that day, without lunch/dinner allocation.
+Nutrition, target comparisons, contribution records and prepared/eaten shopping
+all include the same portion. Library callers can pass `electrolytes_days` to
+the daily nutrition, contribution and shopping functions; it defaults to empty.
+
+With custom meal files, define `extra_electrolytes` only if you select extra days.
+Its quantity can be changed to your actual serving. When migrating older files,
+**move** the powder out of `run` into `extra_electrolytes`: powder left in any
+ordinary meal is still counted as normal intake, and selecting an extra portion
+adds to it. Comments are descriptive; the day selection implements the condition.
 
 ## Custom schedule
 
@@ -65,7 +92,8 @@ Use `--schedule schedule.json` with, for example:
 {
   "days": ["monday", "tuesday"],
   "exercise_split": {"monday": "strength", "tuesday": "run"},
-  "categories_split": {"carb": "0.75", "protein": "0.5"}
+  "categories_split": {"carb": "0.75", "protein": "0.5"},
+  "electrolytes_days": ["tuesday"]
 }
 ```
 

@@ -72,6 +72,19 @@ def main(argv=None) -> int:
     parser.add_argument(
         "--start-day", help="Default: first day of the repeating schedule"
     )
+    electrolytes = parser.add_mutually_exclusive_group()
+    electrolytes.add_argument(
+        "--electrolytes-day",
+        action="append",
+        metavar="DAY",
+        help="Include extra_electrolytes on this schedule day; repeat for more days. "
+        "Replaces schedule electrolytes_days when supplied.",
+    )
+    electrolytes.add_argument(
+        "--no-extra-electrolytes",
+        action="store_true",
+        help="Disable scheduled extra electrolytes for this report",
+    )
     parser.add_argument(
         "--days", type=int, default=7, help="Number of consecutive days"
     )
@@ -130,6 +143,19 @@ def main(argv=None) -> int:
             raise ValueError("--days must be positive")
         start = days.index(args.start_day or days[0])
         selected = [days[(start + i) % len(days)] for i in range(args.days)]
+        electrolytes_days = schedule.get("electrolytes_days", [])
+        if args.no_extra_electrolytes:
+            electrolytes_days = []
+        elif args.electrolytes_day is not None:
+            electrolytes_days = args.electrolytes_day
+        if not isinstance(electrolytes_days, list) or any(
+            not isinstance(day, str) or day not in days for day in electrolytes_days
+        ):
+            raise ValueError("electrolytes_days must be a list of schedule day names")
+        if electrolytes_days and "extra_electrolytes" not in meals:
+            raise ValueError(
+                "Selected electrolytes days require an extra_electrolytes meal"
+            )
         if args.report == "targets" and args.targets is None:
             raise ValueError("--report targets requires --targets")
         if args.report == "shopping" and (args.targets or args.contributors):
@@ -145,7 +171,7 @@ def main(argv=None) -> int:
             for day in selected:
                 print(day.upper())
                 totals = nutrition.calculate_day_eating_nutrition(
-                    day, foods, meals, days, exercise, fractions
+                    day, foods, meals, days, exercise, fractions, electrolytes_days
                 )
                 if args.report != "targets":
                     print_nutrition(totals)
@@ -154,17 +180,27 @@ def main(argv=None) -> int:
                     print_targets(totals, targets[exercise[day]])
                 if args.contributors:
                     print_contributors(
-                        day_contributions(day, foods, meals, days, exercise, fractions),
+                        day_contributions(
+                            day,
+                            foods,
+                            meals,
+                            days,
+                            exercise,
+                            fractions,
+                            electrolytes_days,
+                        ),
                         args.contributors,
                         totals[args.contributors],
                     )
                 print("---")
         if args.report in ("both", "shopping"):
             quantities = (
-                shopping.calculate_shopping_quantities(selected, meals, exercise)
+                shopping.calculate_shopping_quantities(
+                    selected, meals, exercise, electrolytes_days
+                )
                 if args.shopping_basis == "prepared"
                 else shopping.calculate_eating_quantities(
-                    selected, foods, meals, days, exercise, fractions
+                    selected, foods, meals, days, exercise, fractions, electrolytes_days
                 )
             )
             print(f"Shopping List ({args.days} days, {args.shopping_basis} basis)")

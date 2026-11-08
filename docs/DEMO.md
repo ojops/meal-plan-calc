@@ -4,6 +4,13 @@ The README embeds an **eight-second looping GIF** (`docs/media/preview.gif`) lin
 
 The committed media shows a **snapshot** of the supplied meal plan when the video was produced. Optional targets and contribution reports are additional CLI features; the film continues to demonstrate the original calculations and does not assess dietary targets. Regenerating the video uses the **current** `data/foods.json` and `data/meals.json`; changing those files does not retroactively update the committed MP4 or GIF.
 
+The existing recording predates the cooked-state correction for quinoa/grains
+and includes 6 g of electrolyte powder on every run day. Current defaults omit
+that powder, reducing each run day's salt by 0.78 g (and its other recorded
+nutrients accordingly). The committed recording and its input hashes remain
+historical; they should not be expected to match regenerated current defaults.
+Demo generation uses the default schedule with no optional powder selected.
+
 ## Generate
 
 From the repository root, with Python 3.10 and [uv](https://docs.astral.sh/uv/):

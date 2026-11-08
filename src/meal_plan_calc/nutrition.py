@@ -79,11 +79,12 @@ def calculate_day_eating_nutrition(
     days: list[str],
     exercise_split: dict[str, str],
     categories_split: dict[str, Decimal],
+    electrolytes_days=(),
 ) -> dict[str, Decimal]:
     """Return nutrients eaten on a day, including portions from earlier batches."""
     totals = empty_nutrition_totals()
     for meal, fractions in eating_meals(
-        day, foods, meals, days, exercise_split, categories_split
+        day, foods, meals, days, exercise_split, categories_split, electrolytes_days
     ):
         meal_totals = calculate_meal_nutrition(meal, foods, fractions)
         for nutrient in NUTRIENTS:

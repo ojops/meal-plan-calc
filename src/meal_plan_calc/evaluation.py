@@ -14,6 +14,7 @@ def day_contributions(
     days: list[str],
     exercise_split: dict[str, str],
     categories_split: dict[str, Decimal],
+    electrolytes_days=(),
 ) -> list[dict]:
     """Return each consumed ingredient's quantity, state, source and nutrients.
 
@@ -22,7 +23,7 @@ def day_contributions(
     """
     result = []
     for name, source, meal, fractions in eating_meal_entries(
-        day, foods, meals, days, exercise_split, categories_split
+        day, foods, meals, days, exercise_split, categories_split, electrolytes_days
     ):
         for ingredient, quantity in meal.items():
             fraction = (

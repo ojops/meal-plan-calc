@@ -4,7 +4,7 @@ A Python command-line project for calculating daily nutrition and shopping quant
 
 [![Eight-second preview of calculated daily nutrition](docs/media/preview.gif)](https://raw.githubusercontent.com/ojops/meal-plan-calc/45d36fb767beec954759e319df599bb409524fab/docs/media/demo.mp4)
 
-*Preview: nutrition calculated from the supplied data. [Watch the full 36-second demonstration (MP4)](https://raw.githubusercontent.com/ojops/meal-plan-calc/45d36fb767beec954759e319df599bb409524fab/docs/media/demo.mp4) · [How the video is made](docs/DEMO.md).*
+*Preview: historical meal-plan snapshot, including the formerly automatic electrolyte powder. [Watch the full 36-second demonstration (MP4)](https://raw.githubusercontent.com/ojops/meal-plan-calc/45d36fb767beec954759e319df599bb409524fab/docs/media/demo.mp4) · [How the video is made](docs/DEMO.md).*
 
 ## Overview
 
@@ -16,6 +16,7 @@ Optional nutritional targets turn those totals into daily comparisons, with exer
 
 - Calculate calories, fat, saturates, carbohydrates, sugars, fibre, protein and salt
 - Configure foods, meals and exercise schedules using JSON
+- Include additional electrolyte powder only on explicitly selected days
 - Distribute cooked batches across subsequent lunches and dinners
 - Report shopping quantities for arbitrary periods, based on food **prepared** or **eaten**
 - Evaluate optional energy and nutrient aims, minimums and maximums by exercise type
@@ -48,6 +49,27 @@ By default, the program reports daily nutrition and a week of **prepared** shopp
 
 Edit `data/foods.json` and `data/meals.json`, or specify alternative files with `--foods`, `--meals` and `--schedule`. See `uv run meal-plan-calc --help` for more options.
 
+### Optional electrolyte powder
+
+The supplied plan excludes additional electrolyte powder by default. Select the
+days when you want the 6 g portion included:
+
+```bash
+uv run meal-plan-calc --electrolytes-day tuesday --electrolytes-day thursday
+uv run meal-plan-calc --days 14 --report shopping --electrolytes-day tuesday
+```
+
+Each selected day gets one portion on every occurrence in the reporting period,
+including across repeated weeks. Selection works on any schedule day and affects
+nutrition, targets, contributions and both shopping bases together. The run-day
+tablet remains part of the normal run meal.
+
+For a saved preference, add `"electrolytes_days": ["tuesday", "thursday"]` to your
+schedule JSON. CLI day selections replace that list; `--no-extra-electrolytes`
+disables it for a report. Adjust the portion in `extra_electrolytes` in
+`data/meals.json`. See [selection rules](docs/CALCULATIONS.md#optional-electrolyte-powder)
+for custom files and migration from the old default.
+
 ### Nutritional targets and contributions
 
 ```bash
@@ -59,11 +81,13 @@ The example numbers illustrate the file format; they are **not nutritional recom
 
 Reports show actual intake, signed and absolute deviations, percentage deviation and whether the directional goal is met. Zero targets have an undefined percentage (`n/a`). Only configured nutrients are assessed. `--contributors nutrient` also works without targets and lists up to five consumed ingredient contributions, their meal, batch source and recorded state. See [target configuration and formulas](docs/CALCULATIONS.md#nutritional-targets) for details.
 
-Existing commands work unchanged without a targets file. Targets and contributions are available with `nutrition`, `targets` or `both` reports; shopping calculations remain based on the original plan.
+Existing commands work without a targets file. Targets and contributions are available with `nutrition`, `targets` or `both` reports; shopping calculations use the same plan and optional powder selection.
 
 ## Calculation Method and Limitations
 
 Lunch uses the previous day's batch; dinner uses the batch from two days earlier. Category fractions determine how much of each batch goes to each meal. Nutrients are listed per 100 g, and ingredient quantities retain each food's recorded **raw or cooked state**. No cooking-yield or purchase-pack conversion is performed; supplement units still need checking.
+
+Quinoa and grains are recorded as **cooked**: their quantities refer to the supplied cooked products. This label correction does not change per-100-g nutrient values or perform a weight conversion.
 
 The main calculations are in `src/meal_plan_calc/nutrition.py`, `planning.py` and `shopping.py`. See [calculation notes](docs/CALCULATIONS.md) for formulas and schedule rules.
 
