@@ -3,7 +3,9 @@ from decimal import Decimal
 from pathlib import Path
 
 from meal_plan_calc import nutrition, shopping
+from meal_plan_calc.evaluation import day_contributions
 from meal_plan_calc.planning import CATEGORIES_SPLIT, DAYS, EXERCISE_SPLIT
+from meal_plan_calc.targets import Target, compare, load_targets
 from meal_plan_calc.validation import load_json, nonnegative_decimal, validate_data
 
 PACKAGE_DATA = Path(__file__).with_name("data")
@@ -17,6 +19,45 @@ DATA_DIR = (
 def print_nutrition(totals: dict[str, Decimal]) -> None:
     for nutrient, value in totals.items():
         print(f"{nutrient}: {value:.2f}")
+
+
+def print_targets(totals: dict[str, Decimal], targets: dict[str, Target]) -> None:
+    """Display signed and absolute differences separately from goal satisfaction."""
+    print("User targets (kcal for calories, g otherwise; not dietary advice)")
+    print(
+        "nutrient | actual | target (mode; tolerance) | deviation | absolute | % | status"
+    )
+    for nutrient in nutrition.NUTRIENTS:
+        if nutrient not in targets:
+            continue
+        target = targets[nutrient]
+        result = compare(totals[nutrient], target)
+        percent = (
+            f"{result.percentage_deviation:+.2f}%"
+            if result.percentage_deviation is not None
+            else "n/a (zero target)"
+        )
+        print(
+            f"{nutrient} | {result.actual:.2f} | {target.value:.2f} "
+            f"({target.mode}; {target.tolerance:.2f}) | {result.deviation:+.2f} | "
+            f"{result.absolute_deviation:.2f} | {percent} | {result.status}"
+        )
+
+
+def print_contributors(entries: list[dict], nutrient: str, total: Decimal) -> None:
+    """Show the five largest consumed contributions, including batch provenance."""
+    unit = "kcal" if nutrient == "calories" else "g"
+    print(f"Largest {nutrient} contributions (up to 5; consumed portions)")
+    for entry in sorted(
+        entries, key=lambda row: row["nutrients"][nutrient], reverse=True
+    )[:5]:
+        value = entry["nutrients"][nutrient]
+        share = f"{value / total * 100:.2f}%" if total else "n/a"
+        print(
+            f"  {entry['meal']} [{entry['source']}] / {entry['ingredient']}: "
+            f"{value:.2f} {unit} ({share} of day); "
+            f"{entry['quantity']:.2f} g, state={entry['state']}"
+        )
 
 
 def main(argv=None) -> int:
@@ -35,10 +76,18 @@ def main(argv=None) -> int:
         "--days", type=int, default=7, help="Number of consecutive days"
     )
     parser.add_argument(
-        "--report", choices=("both", "nutrition", "shopping"), default="both"
+        "--report", choices=("both", "nutrition", "shopping", "targets"), default="both"
     )
     parser.add_argument(
         "--shopping-basis", choices=("prepared", "eaten"), default="prepared"
+    )
+    parser.add_argument(
+        "--targets", type=Path, help="Optional JSON nutrient goals by exercise type"
+    )
+    parser.add_argument(
+        "--contributors",
+        choices=nutrition.NUTRIENTS,
+        help="Show the largest consumed ingredient contributions",
     )
     args = parser.parse_args(argv)
     try:
@@ -81,14 +130,34 @@ def main(argv=None) -> int:
             raise ValueError("--days must be positive")
         start = days.index(args.start_day or days[0])
         selected = [days[(start + i) % len(days)] for i in range(args.days)]
-        if args.report in ("both", "nutrition"):
+        if args.report == "targets" and args.targets is None:
+            raise ValueError("--report targets requires --targets")
+        if args.report == "shopping" and (args.targets or args.contributors):
+            raise ValueError(
+                "Use --report nutrition, targets or both for target/contributor reports"
+            )
+        targets = (
+            load_targets(args.targets, {exercise[day] for day in days})
+            if args.targets
+            else None
+        )
+        if args.report in ("both", "nutrition", "targets"):
             for day in selected:
                 print(day.upper())
-                print_nutrition(
-                    nutrition.calculate_day_eating_nutrition(
-                        day, foods, meals, days, exercise, fractions
-                    )
+                totals = nutrition.calculate_day_eating_nutrition(
+                    day, foods, meals, days, exercise, fractions
                 )
+                if args.report != "targets":
+                    print_nutrition(totals)
+                if targets is not None:
+                    print(f"Exercise type: {exercise[day]}")
+                    print_targets(totals, targets[exercise[day]])
+                if args.contributors:
+                    print_contributors(
+                        day_contributions(day, foods, meals, days, exercise, fractions),
+                        args.contributors,
+                        totals[args.contributors],
+                    )
                 print("---")
         if args.report in ("both", "shopping"):
             quantities = (

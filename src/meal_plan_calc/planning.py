@@ -32,11 +32,25 @@ def allocation_fractions(meal, foods, categories_split, meal_part):
 
 def eating_meals(day, foods, meals, days, exercise_split, categories_split):
     """Yield meals and fractions eaten today, including periodic carry over"""
+    for _, _, meal, fractions in eating_meal_entries(
+        day, foods, meals, days, exercise_split, categories_split
+    ):
+        yield meal, fractions
+
+
+def eating_meal_entries(day, foods, meals, days, exercise_split, categories_split):
+    """Yield meal name, source key, quantities and fractions, with batch provenance."""
     if not days or len(set(days)) != len(days):
         raise ValueError("The repeating schedule must contain distinct days")
     index = days.index(day)
     for meal_type in ("snack", "supplements", exercise_split[day], "breakfast"):
-        yield meals[meal_type], None
+        yield meal_type, meal_type, meals[meal_type], None
     for offset, part in ((1, "lunch"), (2, "dinner")):
-        meal = meals[days[(index - offset) % len(days)]]
-        yield meal, allocation_fractions(meal, foods, categories_split, part)
+        source = days[(index - offset) % len(days)]
+        meal = meals[source]
+        yield (
+            part,
+            source,
+            meal,
+            allocation_fractions(meal, foods, categories_split, part),
+        )
