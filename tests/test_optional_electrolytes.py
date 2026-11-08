@@ -66,7 +66,7 @@ def test_cli_optional_powder_shopping(basis, capsys):
     args = ["--days", "14", "--report", "shopping", "--shopping-basis", basis]
     assert main(args) == 0
     assert "electrolytes_powder:" not in capsys.readouterr().out
-    assert main(args + ["--electrolytes-day", "tuesday"]) == 0
+    assert main(args + ["--sweaty", "tuesday"]) == 0
     assert "electrolytes_powder: 12 g" in capsys.readouterr().out
 
 
@@ -85,7 +85,7 @@ def test_cli_targets_and_contributors_include_extra(capsys):
     ]
     assert main(args) == 0
     baseline = capsys.readouterr().out
-    assert main(args + ["--electrolytes-day", "tuesday"]) == 0
+    assert main(args + ["--sweaty", "tuesday"]) == 0
     changed = capsys.readouterr().out
     before = next(line for line in baseline.splitlines() if line.startswith("salt |"))
     after = next(line for line in changed.splitlines() if line.startswith("salt |"))
@@ -123,7 +123,7 @@ def test_custom_schedule_selection_and_cli_override(tmp_path, capsys):
     ]
     for extra, expected in [
         ([], "6 g"),
-        (["--electrolytes-day", "tuesday"], "12 g"),
+        (["--sweaty", "tuesday"], "12 g"),
         (["--no-extra-electrolytes"], None),
     ]:
         assert main(args + extra) == 0
@@ -164,6 +164,6 @@ def test_missing_optional_meal_only_required_when_selected(tmp_path, capsys):
     assert main(["--meals", str(path), "--days", "1"]) == 0
     capsys.readouterr()
     with pytest.raises(SystemExit) as error:
-        main(["--meals", str(path), "--electrolytes-day", "tuesday"])
+        main(["--meals", str(path), "--sweaty", "tuesday"])
     assert error.value.code == 2
     assert "require an extra_electrolytes meal" in capsys.readouterr().err

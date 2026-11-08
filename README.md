@@ -55,8 +55,8 @@ The supplied plan excludes additional electrolyte powder by default. Select the
 days when you want the 6 g portion included:
 
 ```bash
-uv run meal-plan-calc --electrolytes-day tuesday --electrolytes-day thursday
-uv run meal-plan-calc --days 14 --report shopping --electrolytes-day tuesday
+uv run meal-plan-calc --sweaty tuesday --sweaty thursday
+uv run meal-plan-calc --days 14 --report shopping --sweaty tuesday
 ```
 
 Each selected day gets one portion on every occurrence in the reporting period,

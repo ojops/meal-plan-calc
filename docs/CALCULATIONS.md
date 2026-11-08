@@ -61,7 +61,7 @@ The supplied `run` meal no longer includes powder. The separate
 `extra_electrolytes` meal contains `electrolytes_powder: "6"` (grams) and is
 included only on selected days. The tablet remains in the run meal.
 
-Use `--electrolytes-day tuesday`, repeating the option for additional days, or
+Use `--sweaty tuesday`, repeating the option for additional days, or
 save an `electrolytes_days` list in a schedule file. Omission means no extra
 powder. CLI selections replace the saved list; `--no-extra-electrolytes` overrides
 it with no selected days. These two CLI options cannot be combined.

@@ -74,7 +74,7 @@ def main(argv=None) -> int:
     )
     electrolytes = parser.add_mutually_exclusive_group()
     electrolytes.add_argument(
-        "--electrolytes-day",
+        "--sweaty",
         action="append",
         metavar="DAY",
         help="Include extra_electrolytes on this schedule day; repeat for more days. "
@@ -146,8 +146,8 @@ def main(argv=None) -> int:
         electrolytes_days = schedule.get("electrolytes_days", [])
         if args.no_extra_electrolytes:
             electrolytes_days = []
-        elif args.electrolytes_day is not None:
-            electrolytes_days = args.electrolytes_day
+        elif args.sweaty is not None:
+            electrolytes_days = args.sweaty
         if not isinstance(electrolytes_days, list) or any(
             not isinstance(day, str) or day not in days for day in electrolytes_days
         ):

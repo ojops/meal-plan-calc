@@ -1,6 +1,6 @@
 {
     "comments": {
-        "electrolytes_powder": "Optional: select days with --electrolytes-day or schedule electrolytes_days. Quantity is in extra_electrolytes."
+        "electrolytes_powder": "Optional: select days with --sweaty or schedule electrolytes_days. Quantity is in extra_electrolytes."
     },
 
     "snack": {
