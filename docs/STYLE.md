@@ -4,17 +4,17 @@ These conventions favour clear calculations and dependable input handling.
 
 ## Python
 
-- Target Python 3.10; use four-space indentation and Ruff's 88-character formatting.
+- Target Python 3.10. Use four-space indentation and Ruff's 88-character formatting.
 - Use `snake_case` for names and `UPPER_CASE` for constants. Let Ruff organise imports.
 - Use concise public docstrings and type annotations where they clarify interfaces.
 - Keep calculations separate from CLI output. Prefer simple functions to unnecessary abstractions.
 
 ## Numerical and data rules
 
-- Use `Decimal` for food quantities, nutrient values and allocation fractions.
+- Use `Decimal` for food quantities, nutrient values, and allocation fractions.
 - Round only for display, not during calculations.
 - Validate external JSON data and report malformed values rather than substituting guesses.
-- Explain non-obvious units, schedule behaviour and assumptions in comments; avoid narrating straightforward code.
+- Explain non-obvious units, schedule behaviour, and assumptions in comments. Avoid narrating straightforward code.
 
 ## Checks
 

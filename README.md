@@ -8,18 +8,18 @@ A Python command-line project for calculating daily nutrition and shopping quant
 
 ## Overview
 
-This project turns a structured meal plan into practical reports: what nutrients are consumed each day and which ingredients are needed over a chosen period. Its JSON-based food, meal and exercise schedules can be adjusted as a plan changes, while batch-cooking rules account for food prepared on one day and eaten later.
+Use a repeating meal plan to calculate daily nutrients and shopping quantities. JSON files define foods, meals, and exercise schedules. Batch allocation accounts for food prepared on one day and eaten later.
 
-Optional nutritional targets turn those totals into daily comparisons, with exercise-specific goals, tolerances and signed/absolute deviations. Ingredient contribution reports help explain the current intake before proposing changes.
+Optional targets compare intake with exercise-specific goals. Contribution reports show which ingredients supply each nutrient.
 
 ## Features
 
-- Calculate calories, fat, saturates, carbohydrates, sugars, fibre, protein and salt
-- Configure foods, meals and exercise schedules using JSON
+- Calculate calories, fat, saturates, carbohydrates, sugars, fibre, protein, and salt
+- Configure foods, meals, and exercise schedules using JSON
 - Include additional electrolyte powder only on explicitly selected days
 - Distribute cooked batches across subsequent lunches and dinners
 - Report shopping quantities for arbitrary periods, based on food **prepared** or **eaten**
-- Evaluate optional energy and nutrient aims, minimums and maximums by exercise type
+- Evaluate energy and nutrient aims, minimums, and maximums by exercise type
 - Show absolute and percentage deviations, plus the largest consumed ingredient contributions
 - Validate inputs and retain precision using Python `Decimal`
 
@@ -47,7 +47,7 @@ uv run meal-plan-calc --start-day thursday --days 4 --report shopping
 
 By default, the program reports daily nutrition and a week of **prepared** shopping. Add `--shopping-basis eaten` to count ingredients consumed, including portions cooked on earlier days.
 
-Edit `data/foods.json` and `data/meals.json`, or specify alternative files with `--foods`, `--meals` and `--schedule`. See `uv run meal-plan-calc --help` for more options.
+Edit `data/foods.json` and `data/meals.json`, or use `--foods`, `--meals`, and `--schedule` for custom files. See `uv run meal-plan-calc --help` for all options.
 
 ### Optional electrolyte powder
 
@@ -59,13 +59,12 @@ uv run meal-plan-calc --sweaty tuesday --sweaty thursday
 uv run meal-plan-calc --days 14 --report shopping --sweaty tuesday
 ```
 
-Each selected day gets one portion on every occurrence in the reporting period,
-including across repeated weeks. Selection works on any schedule day and affects
-nutrition, targets, contributions and both shopping bases together. The run-day
-tablet remains part of the normal run meal.
+Each selected day gets one portion per occurrence, including across repeated weeks.
+The selection applies to nutrition, targets, contributions, and both shopping bases.
+The run-day tablet remains in the normal run meal.
 
 For a saved preference, add `"electrolytes_days": ["tuesday", "thursday"]` to your
-schedule JSON. CLI day selections replace that list; `--no-extra-electrolytes`
+schedule JSON. CLI day selections replace that list. `--no-extra-electrolytes`
 disables it for a report. Adjust the portion in `extra_electrolytes` in
 `data/meals.json`. See [selection rules](docs/CALCULATIONS.md#optional-electrolyte-powder)
 for custom files and migration from the old default.
@@ -77,19 +76,19 @@ uv run meal-plan-calc --targets data/targets.example.json --report targets
 uv run meal-plan-calc --targets data/targets.example.json --report nutrition --days 1 --contributors protein
 ```
 
-The example numbers illustrate the file format; they are **not nutritional recommendations**. Supply your own targets. `default` goals apply to all exercise types; `exercise` overrides selected nutrients for types such as `run`. Each goal has a `value`, optional `mode` (`aim`, `minimum`, `maximum`) and absolute `tolerance`. Calories use kcal; other nutrients use grams.
+The example targets illustrate the format and are **not nutritional recommendations**. Supply your own goals in kcal for calories and grams for other nutrients. Defaults can be overridden by exercise type.
 
-Reports show actual intake, signed and absolute deviations, percentage deviation and whether the directional goal is met. Zero targets have an undefined percentage (`n/a`). Only configured nutrients are assessed. `--contributors nutrient` also works without targets and lists up to five consumed ingredient contributions, their meal, batch source and recorded state. See [target configuration and formulas](docs/CALCULATIONS.md#nutritional-targets) for details.
+Reports show actual intake, signed and absolute deviations, percentage deviation, and goal status. A zero target has an undefined percentage (`n/a`). Only configured nutrients are assessed. See [target configuration and formulas](docs/CALCULATIONS.md#nutritional-targets) for modes, tolerances, and overrides.
 
-Existing commands work without a targets file. Targets and contributions are available with `nutrition`, `targets` or `both` reports; shopping calculations use the same plan and optional powder selection.
+`--contributors nutrient` works with or without targets and shows up to five ingredients, their consumed quantities, meal sources, and recorded states. Use `nutrition`, `targets`, or `both` reports for these features. Shopping uses the same plan and optional powder selection.
 
 ## Calculation Method and Limitations
 
-Lunch uses the previous day's batch; dinner uses the batch from two days earlier. Category fractions determine how much of each batch goes to each meal. Nutrients are listed per 100 g, and ingredient quantities retain each food's recorded **raw or cooked state**. No cooking-yield or purchase-pack conversion is performed; supplement units still need checking.
+Lunch uses the previous day's batch, and dinner uses the batch from two days earlier. Category fractions divide each batch. Nutrients are listed per 100 g, with quantities in the food's recorded **raw or cooked state**. No cooking-yield or purchase-pack conversion is performed. Supplement units still need checking.
 
-Quinoa and grains are recorded as **cooked**: their quantities refer to the supplied cooked products. This label correction does not change per-100-g nutrient values or perform a weight conversion.
+Quinoa and grains quantities refer to **cooked** product weights. See the [input audit notes](docs/CALCULATIONS.md#specific-uncertainties-in-the-supplied-example) before relying on the example data.
 
-The main calculations are in `src/meal_plan_calc/nutrition.py`, `planning.py` and `shopping.py`. See [calculation notes](docs/CALCULATIONS.md) for formulas and schedule rules.
+See [calculation notes](docs/CALCULATIONS.md) for formulas, schedule rules, and data limitations.
 
 ## Development Roadmap
 
@@ -97,9 +96,9 @@ Development is focused on moving from calculating what a meal plan provides to e
 
 ### Planned
 
-- **Validate inputs:** audit nutrient sources, raw versus cooked weights and supplement units before interpreting target comparisons as a dietary assessment.
+- **Validate inputs:** audit nutrient sources, raw versus cooked weights, and supplement units before interpreting target comparisons as a dietary assessment.
 - **Compare proposed adjustments:** build on the implemented targets and contribution reports to compare explicit portion scenarios, including their shopping effects, without mutating the baseline.
-- **Constrain future optimisation:** define user-selected portion bounds, preferences and treatment of competing goals before introducing an optimiser.
+- **Constrain future optimisation:** define portion bounds, preferences, and treatment of competing goals before introducing an optimiser.
 - **Improve shopping accuracy:** add optional cooking-yield and purchase-pack conversions while keeping prepared and eaten quantities distinct.
 
 ## Project Structure
@@ -119,9 +118,9 @@ meal-plan-calc/
 │   ├── validation.py         # JSON and data validation
 │   └── main.py               # Command-line reporting
 ├── scripts/                  # Portfolio video rendering
-├── tests/                    # Nutrition, shopping and validation tests
+├── tests/                    # Nutrition, targets, shopping, and validation tests
 ├── docs/                     # Calculation and demo documentation
-│   └── media/                # Preview GIF, MP4 and recorded data
+│   └── media/                # Preview GIF, MP4, and recorded data
 ├── pyproject.toml            # Project metadata and dependencies
 ├── uv.lock                   # Locked dependencies
 └── README.md
@@ -135,7 +134,7 @@ uv run ruff check .
 uv run ruff format --check .
 ```
 
-Dependencies are managed with `uv`; when changing them, commit both `pyproject.toml` and `uv.lock`. GitHub Actions runs tests and formatting checks. See [coding conventions](docs/STYLE.md).
+When changing dependencies, commit both `pyproject.toml` and `uv.lock`. GitHub Actions runs tests and formatting checks. See [coding conventions](docs/STYLE.md).
 
 ## License
 
