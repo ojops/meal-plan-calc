@@ -23,7 +23,21 @@ Optional targets compare intake with exercise-specific goals. Contribution repor
 - Show absolute and percentage deviations, plus the largest consumed ingredient contributions
 - Validate inputs and retain precision using Python `Decimal`
 
-Targets are user-defined objectives, not universal dietary requirements. Ingredient optimisation is not implemented.
+Targets are user-defined objectives, not universal dietary requirements. An optional
+[profile-driven optimiser](docs/OPTIMISATION.md) now proposes the smallest bounded
+quantity changes needed to meet exercise-specific targets and food/group minimums.
+It preserves the current plan and writes a separate proposal.
+
+```bash
+uv sync --locked --extra optimise
+uv run --extra optimise python -m meal_plan_calc.optimise --profile data/profile.example.json --preferences data/optimisation.example.json --output proposals/report.json --export-meals proposals/meals.json
+```
+
+The supplied profile is fictitious and its coefficients are illustrative. Copy it
+to a Git-ignored `profile.local.json` and choose your own targets. The optimiser
+respects shared meals, batch carry-over and the existing raw/cooked units. It uses
+SciPy/HiGHS only when requested; ordinary calculation remains dependency-free.
+See the [formulation, examples and limitations](docs/OPTIMISATION.md).
 
 ## Requirements and Installation
 

@@ -11,6 +11,7 @@ dependencies = []
 meal-plan-calc = "meal_plan_calc.main:main"
 
 [project.optional-dependencies]
+optimise = ["scipy==1.15.3"]
 demo = [
     "pillow==12.3.0",
 ]

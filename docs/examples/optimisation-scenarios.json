@@ -1,0 +1,60 @@
+{
+  "illustrative": {
+    "status": "optimal",
+    "objective_value": "0.05124007054673695238095238095",
+    "changes": [
+      {
+        "source": "friday",
+        "food": "rice",
+        "before_g": "105",
+        "after_g": "110.38020740740738",
+        "delta_g": "5.38020740740738"
+      }
+    ]
+  },
+  "tighter_energy_range": {
+    "status": "optimal",
+    "objective_value": "1.265188725841642698640540745",
+    "changes": [
+      {
+        "source": "breakfast",
+        "food": "oats",
+        "before_g": "75",
+        "after_g": "104.92678253119435",
+        "delta_g": "29.92678253119435"
+      },
+      {
+        "source": "friday",
+        "food": "rice",
+        "before_g": "105",
+        "after_g": "123.91757037037029",
+        "delta_g": "18.91757037037029"
+      },
+      {
+        "source": "saturday",
+        "food": "rice",
+        "before_g": "171",
+        "after_g": "101.82131358024682",
+        "delta_g": "-69.17868641975318"
+      },
+      {
+        "source": "tuesday",
+        "food": "beef",
+        "before_g": "120",
+        "after_g": "149.53136094674556",
+        "delta_g": "29.53136094674556"
+      },
+      {
+        "source": "wednesday",
+        "food": "rice",
+        "before_g": "110",
+        "after_g": "106.1115851851851",
+        "delta_g": "-3.8884148148149"
+      }
+    ]
+  },
+  "impossible_fruit_minimum": {
+    "status": "infeasible",
+    "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "adjustable": {
+    "oats": {"min_g": "40", "max_g": "150"},
+    "rice": {"min_g": "40", "max_g": "300"},
+    "chicken": {"min_g": "40", "max_g": "250"},
+    "beef": {"min_g": "40", "max_g": "250"},
+    "milk": {"min_g": "100", "max_g": "400"},
+    "yoghurt": {"min_g": "50", "max_g": "250"},
+    "extra_virgin_olive_oil": {"min_g": "0", "max_g": "25"}
+  },
+  "groups": {"fruit": ["apple", "orange", "banana", "kiwi", "blueberries"]},
+  "minimums": [
+    {"food": "oats", "grams": "50"},
+    {"group": "fruit", "grams": "250"}
+  ]
+}
