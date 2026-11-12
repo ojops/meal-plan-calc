@@ -3,7 +3,7 @@
 The optional optimiser proposes a separate plan for the existing repeating
 schedule. It does not edit meals, food data, profiles or previous outputs.
 Calories/macros are planning assumptions, not personalised medical advice or a
-certificate of nutritional completeness. The example profiles are fictitious.
+guarantee of nutritional completeness. The example profiles are fictitious.
 
 ## Quick start
 
@@ -147,8 +147,9 @@ your intended group minimum.
 ## Two-stage mixed-integer formulation
 
 SciPy's existing pinned HiGHS backend solves the model; no new dependency is added.
-One variable represents each adjustable source/food quantity. Increment variables
-are integer counts. Optional foods use a binary active/inactive variable linked
+Each variable represents a food quantity in an existing meal or prepared batch.
+The solver matrix stores only nonzero coefficients to avoid allocating large
+arrays of zeros as the schedule grows. Increment variables are integer counts. Optional foods use a binary active/inactive variable linked
 to their lower and upper bounds. Existing batch allocation functions map those
 variables into each day's food quantities and nutrients.
 
@@ -165,14 +166,14 @@ objective**, then minimises:
 
 `sum(abs(proposed source grams − baseline source grams) / max(baseline, 50 g))`
 
-This is lexicographic optimisation, not an arbitrary weighted blend of target fit
-and baseline similarity. The 50 g floor avoids extreme penalties on tiny baseline
-portions. Neither objective measures health or food cost. Multiple equally optimal
+This ordered approach is called lexicographic optimisation: target fit has
+priority over keeping quantities close to the baseline. The 50 g floor avoids
+extreme penalties on tiny baseline portions. Neither objective measures health or food cost. Multiple equally optimal
 plans can exist, particularly with shared batch allocations.
 
 `--time-limit` defaults to 60 seconds **per stage**. Both stages request zero relative
-MIP gap. A limit/failure produces no accepted meal plan even if an incumbent exists;
-this avoids describing an unproven two-stage result as optimal. Reports retain
+MIP gap. A time limit or solver failure produces no accepted meal plan, even if
+a candidate solution exists. This avoids reporting an unproven result as optimal. Reports retain
 status, message, objective, time limit, MIP gap and dual bound where HiGHS supplies
 them. Gap fields can be null for continuous solves.
 
@@ -187,7 +188,7 @@ rounding a continuous proposal to convenient portions after solving.
 ## Reports and nutrition coverage
 
 Reports contain resolved assumptions, targets and their hard/soft status,
-baseline/proposed nutrition, signed deviations and remaining range violations,
+baseline and proposed nutrition, signed deviations, and remaining range violations,
 baseline/proposed target-fit objectives, quantity changes, daily batch effects,
 prepared/eaten shopping differences, solver stages and constraint audits.
 CLI reports include input checksums, schedule and SciPy version.

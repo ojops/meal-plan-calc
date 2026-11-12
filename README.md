@@ -23,11 +23,10 @@ Optional targets compare intake with exercise-specific goals. Contribution repor
 - Show absolute and percentage deviations, plus the largest consumed ingredient contributions
 - Validate inputs and retain precision using Python `Decimal`
 
-Targets are user-defined objectives, not universal dietary requirements. The optional
-[profile-driven optimiser](docs/OPTIMISATION.md) now derives macro ranges from body
-weight and exercise-specific **total daily calorie budgets**, fits those ranges
-first, then minimises changes to the existing plan. No exercise calories are added
-a second time. Hard nutritional limits, exclusions and practical portions remain
+The optional [optimiser](docs/OPTIMISATION.md) uses body weight and **total daily
+calorie budgets** to suggest macro ranges for each exercise type. It fits those
+ranges first, then minimises changes to the existing plan. No exercise calories are added
+a second time. Hard nutritional limits, exclusions, and practical portions remain
 mandatory; optional foods can be zero or a useful minimum, with gram increments or
 explicit whole-unit conversions.
 
@@ -39,10 +38,10 @@ cp -n data/portion-rules.example.json portions.local.json
 uv run --extra optimise python -m meal_plan_calc.optimise --profile profile.local.json --portion-rules portions.local.json --output proposals/report.json --export-meals proposals/meals.json
 ```
 
-Edit the local copies: supplied body data, coefficients and unit conversions are
+Edit the local copies: supplied body data, coefficients, and unit conversions are
 illustrative, not personalised recommendations. Existing inputs and output files
 are never overwritten. Reports show remaining target deviations, batch effects,
-shopping changes and solver outcomes; a mathematical optimum does not certify
+shopping changes, and solver outcomes; a mathematical optimum does not certify
 nutritional adequacy. Existing profiles and `--preferences` commands still work.
 SciPy/HiGHS remains an optional pinned dependency; ordinary calculation is unchanged.
 See the [formulation, examples, compatibility and limitations](docs/OPTIMISATION.md).
@@ -114,13 +113,12 @@ See [calculation notes](docs/CALCULATIONS.md) for formulas, schedule rules, and 
 
 ## Development Roadmap
 
-Development is focused on moving from calculating what a meal plan provides to evaluating it against useful nutritional objectives, while preserving reliable shopping calculations.
+The calculator now compares targets and proposes practical portions. The next priorities are checking input quality and improving shopping estimates.
 
 ### Planned
 
 - **Validate inputs:** audit nutrient sources, raw versus cooked weights, and supplement units before interpreting target comparisons as a dietary assessment.
-- **Compare proposed adjustments:** build on the implemented targets and contribution reports to compare explicit portion scenarios, including their shopping effects, without mutating the baseline.
-- **Constrain future optimisation:** define portion bounds, preferences, and treatment of competing goals before introducing an optimiser.
+- **Review proposed plans:** compare target fit, portion sizes, and shopping changes using the optimiser. Check whether the configured assumptions suit the intended use.
 - **Improve shopping accuracy:** add optional cooking-yield and purchase-pack conversions while keeping prepared and eaten quantities distinct.
 
 ## Project Structure
@@ -135,6 +133,9 @@ meal-plan-calc/
 │   ├── nutrition.py          # Nutrient calculations
 │   ├── planning.py           # Repeating schedule and allocations
 │   ├── targets.py            # Target configuration and comparisons
+│   ├── optimisation.py       # Targets, portion constraints, and proposal reports
+│   ├── portion_solver.py     # Two-stage mixed-integer solver
+│   ├── macro_profile.py      # Calorie budgets and macro assumptions
 │   ├── evaluation.py         # Consumed ingredient contributions
 │   ├── shopping.py           # Prepared and eaten shopping quantities
 │   ├── validation.py         # JSON and data validation
@@ -151,7 +152,7 @@ meal-plan-calc/
 ## Development
 
 ```bash
-uv run pytest
+uv run --extra optimise pytest
 uv run ruff check .
 uv run ruff format --check .
 ```

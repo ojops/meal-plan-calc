@@ -10,6 +10,7 @@ AUDIT_TOLERANCE = D("0.0000001")
 def solve_portions(baseline, bounds, rules, rows, time_limit):
     import numpy as np
     from scipy.optimize import Bounds, LinearConstraint, milp
+    from scipy.sparse import csc_matrix
 
     if isinstance(time_limit, bool) or not isfinite(time_limit) or time_limit <= 0:
         raise ValueError("time_limit must be finite and positive")
@@ -62,10 +63,17 @@ def solve_portions(baseline, bounds, rules, rows, time_limit):
         constraint({i: -float(unit), deviation: -1.0}, -original)
 
     def run(objective):
-        matrix = np.zeros((len(constraints), len(lower)))
+        # Most entries are zero, especially the per-food portion constraints.
+        # Build the solver's sparse format directly instead of a dense matrix.
+        row_indices, columns, values = [], [], []
         for row, (coeff, _) in enumerate(constraints):
             for col, value in coeff.items():
-                matrix[row, col] = value
+                row_indices.append(row)
+                columns.append(col)
+                values.append(value)
+        matrix = csc_matrix(
+            (values, (row_indices, columns)), shape=(len(constraints), len(lower))
+        )
         return milp(
             np.array(objective),
             integrality=np.array(integer),
