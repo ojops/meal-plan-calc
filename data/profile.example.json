@@ -1,0 +1,14 @@
+{
+  "weight_kg": "75",
+  "duration_hours": {"monday": "1", "tuesday": "1", "wednesday": "1", "thursday": "0.75", "friday": "0", "saturday": "1.5", "sunday": "0.5"},
+  "default": {
+    "calories": {"per_kg": "30", "mode": "aim", "tolerance": "250"},
+    "protein": {"per_kg": "1.6", "mode": "minimum"},
+    "fibre": {"base": "25", "mode": "minimum"},
+    "salt": {"base": "6", "mode": "maximum"}
+  },
+  "exercise": {
+    "run": {"calories": {"per_kg": "30", "per_hour": "300", "mode": "aim", "tolerance": "250"}},
+    "strength": {"calories": {"per_kg": "30", "per_hour": "150", "mode": "aim", "tolerance": "250"}}
+  }
+}

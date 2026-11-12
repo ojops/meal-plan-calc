@@ -1,0 +1,15 @@
+{
+  "adjustable": {
+    "oats": {"min_g": "40", "max_g": "150", "required": true, "step_g": "5"},
+    "rice": {"min_g": "40", "max_g": "300", "required": true, "step_g": "5"},
+    "chicken": {"min_g": "40", "max_g": "250", "required": true, "step_g": "10"},
+    "beef": {"min_g": "50", "max_g": "250", "required": true, "step_g": "10"},
+    "milk": {"min_g": "100", "max_g": "400", "required": true, "step_g": "25"},
+    "yoghurt": {"min_g": "50", "max_g": "250", "required": true, "step_g": "10"},
+    "extra_virgin_olive_oil": {"min_g": "5", "max_g": "25", "required": false, "step_g": "5"},
+    "egg": {"min_g": "70", "max_g": "140", "required": true, "unit_g": "70", "unit_label": "illustrative 70 g edible egg portion"}
+  },
+  "excluded": [],
+  "groups": {"fruit": ["apple", "orange", "banana", "kiwi", "blueberries"]},
+  "minimums": [{"group": "fruit", "grams": "250"}]
+}

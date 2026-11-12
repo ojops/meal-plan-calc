@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "weight_kg": "75",
+  "default": {
+    "protein_g_per_kg": "1.6",
+    "fat_fraction": "0.30",
+    "tolerance_fraction": "0.05"
+  },
+  "exercise": {
+    "strength": {"calories": "2400"},
+    "run": {"calories": "2700"},
+    "mobility": {"calories": "2250"}
+  },
+  "hard_targets": [],
+  "hard_limits": {
+    "default": {
+      "fibre": {"value": "25", "mode": "minimum"},
+      "salt": {"value": "6", "mode": "maximum"},
+      "saturates": {"value": "25", "mode": "maximum"}
+    }
+  }
+}

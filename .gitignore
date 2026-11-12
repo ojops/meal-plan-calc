@@ -218,3 +218,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Personal inputs and proposed plans
+*.local.json
+/proposals/
