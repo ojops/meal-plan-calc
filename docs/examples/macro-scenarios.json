@@ -1,0 +1,50 @@
+{
+  "fit_before_baseline": {
+    "status": "optimal",
+    "baseline_primary_objective_value": "5.60",
+    "primary_objective_value": "0",
+    "objective_value": "2.8",
+    "changes": [
+      {
+        "source": "a",
+        "food": "example_food",
+        "before_g": "25",
+        "after_g": "160",
+        "delta_g": "135"
+      },
+      {
+        "source": "b",
+        "food": "example_food",
+        "before_g": "25",
+        "after_g": "30",
+        "delta_g": "5"
+      }
+    ]
+  },
+  "optional_useful_portion": {
+    "status": "optimal",
+    "baseline_primary_objective_value": "5.60",
+    "primary_objective_value": "0",
+    "objective_value": "3.8",
+    "changes": [
+      {
+        "source": "a",
+        "food": "example_food",
+        "before_g": "25",
+        "after_g": "0",
+        "delta_g": "-25"
+      },
+      {
+        "source": "b",
+        "food": "example_food",
+        "before_g": "25",
+        "after_g": "190",
+        "delta_g": "165"
+      }
+    ]
+  },
+  "infeasible_hard_target": {
+    "status": "infeasible",
+    "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)"
+  }
+}

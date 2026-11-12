@@ -17,7 +17,20 @@ def main(argv=None):
     parser.add_argument("--meals", type=Path, default=DATA_DIR / "meals.json")
     parser.add_argument("--schedule", type=Path)
     parser.add_argument("--profile", type=Path, required=True)
-    parser.add_argument("--preferences", type=Path, required=True)
+    parser.add_argument(
+        "--portion-rules",
+        "--preferences",
+        dest="preferences",
+        type=Path,
+        required=True,
+        help="Editable portion bounds, increments, exclusions and daily food/group minimums",
+    )
+    parser.add_argument(
+        "--time-limit",
+        type=float,
+        default=60.0,
+        help="Maximum solver seconds per stage; no incumbent exported on a limit",
+    )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
         "--export-meals",
@@ -48,6 +61,7 @@ def main(argv=None):
             schedule,
             load_json(args.profile),
             load_json(args.preferences),
+            time_limit=args.time_limit,
         )
         report["input_sha256"] = {
             name: hashlib.sha256(path.read_bytes()).hexdigest()
@@ -64,7 +78,7 @@ def main(argv=None):
         import scipy
 
         report["solver"] = {
-            "name": "scipy.optimize.linprog/HiGHS",
+            "name": "scipy.optimize.milp/HiGHS",
             "scipy_version": scipy.__version__,
         }
         for path, value in [(args.output, report)] + (
@@ -77,6 +91,12 @@ def main(argv=None):
                 json.dump(value, handle, indent=2, default=str, allow_nan=False)
                 handle.write("\n")
         print(f"{report['status']}: {args.output}")
+        if report["status"] == "optimal":
+            print(
+                f"Target-range deviation: {report['primary_objective_value']}; baseline change: {report['objective_value']}"
+            )
+            if report["primary_objective_value"] > 0.000001:
+                print("Some soft target ranges remain unmet; inspect the report.")
         return 0 if report["status"] == "optimal" else 1
     except ImportError:
         parser.error(

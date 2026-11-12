@@ -23,21 +23,29 @@ Optional targets compare intake with exercise-specific goals. Contribution repor
 - Show absolute and percentage deviations, plus the largest consumed ingredient contributions
 - Validate inputs and retain precision using Python `Decimal`
 
-Targets are user-defined objectives, not universal dietary requirements. An optional
-[profile-driven optimiser](docs/OPTIMISATION.md) now proposes the smallest bounded
-quantity changes needed to meet exercise-specific targets and food/group minimums.
-It preserves the current plan and writes a separate proposal.
+Targets are user-defined objectives, not universal dietary requirements. The optional
+[profile-driven optimiser](docs/OPTIMISATION.md) now derives macro ranges from body
+weight and exercise-specific **total daily calorie budgets**, fits those ranges
+first, then minimises changes to the existing plan. No exercise calories are added
+a second time. Hard nutritional limits, exclusions and practical portions remain
+mandatory; optional foods can be zero or a useful minimum, with gram increments or
+explicit whole-unit conversions.
 
 ```bash
 uv sync --locked --extra optimise
-uv run --extra optimise python -m meal_plan_calc.optimise --profile data/profile.example.json --preferences data/optimisation.example.json --output proposals/report.json --export-meals proposals/meals.json
+cp -n data/profile.macros.example.json profile.local.json
+cp -n data/portion-rules.example.json portions.local.json
+# Edit the local files before running the optimiser.
+uv run --extra optimise python -m meal_plan_calc.optimise --profile profile.local.json --portion-rules portions.local.json --output proposals/report.json --export-meals proposals/meals.json
 ```
 
-The supplied profile is fictitious and its coefficients are illustrative. Copy it
-to a Git-ignored `profile.local.json` and choose your own targets. The optimiser
-respects shared meals, batch carry-over and the existing raw/cooked units. It uses
-SciPy/HiGHS only when requested; ordinary calculation remains dependency-free.
-See the [formulation, examples and limitations](docs/OPTIMISATION.md).
+Edit the local copies: supplied body data, coefficients and unit conversions are
+illustrative, not personalised recommendations. Existing inputs and output files
+are never overwritten. Reports show remaining target deviations, batch effects,
+shopping changes and solver outcomes; a mathematical optimum does not certify
+nutritional adequacy. Existing profiles and `--preferences` commands still work.
+SciPy/HiGHS remains an optional pinned dependency; ordinary calculation is unchanged.
+See the [formulation, examples, compatibility and limitations](docs/OPTIMISATION.md).
 
 ## Requirements and Installation
 

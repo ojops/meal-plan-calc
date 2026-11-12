@@ -75,3 +75,15 @@ def validate_data(foods: dict, meals: dict) -> None:
             if ingredient not in foods:
                 raise ValueError(f"{name}: unknown ingredient {ingredient}")
             nonnegative_decimal(quantity, f"{name}.{ingredient}")
+
+
+def checked_object(value, allowed, required=()):
+    if (
+        not isinstance(value, dict)
+        or set(value) - set(allowed)
+        or set(required) - set(value)
+    ):
+        raise ValueError(
+            f"Expected object with keys {sorted(allowed)}; required {sorted(required)}"
+        )
+    return value
