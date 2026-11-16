@@ -8,6 +8,7 @@ from pathlib import Path
 from meal_plan_calc.main import DATA_DIR
 from meal_plan_calc.optimisation import optimise
 from meal_plan_calc.planning import CATEGORIES_SPLIT, DAYS, EXERCISE_SPLIT
+from meal_plan_calc.proposal_summary import proposal_summary
 from meal_plan_calc.validation import load_json
 
 
@@ -32,6 +33,11 @@ def main(argv=None):
         help="Maximum solver seconds per stage; no incumbent exported on a limit",
     )
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--summary",
+        action="store_true",
+        help="Also print portion changes, remaining soft target gaps and shopping changes",
+    )
     parser.add_argument(
         "--export-meals",
         type=Path,
@@ -97,6 +103,8 @@ def main(argv=None):
             )
             if report["primary_objective_value"] > 0.000001:
                 print("Some soft target ranges remain unmet; inspect the report.")
+        if args.summary:
+            print(proposal_summary(report))
         return 0 if report["status"] == "optimal" else 1
     except ImportError:
         parser.error(
