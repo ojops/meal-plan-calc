@@ -46,6 +46,11 @@ nutritional adequacy. Existing profiles and `--preferences` commands still work.
 SciPy/HiGHS remains an optional pinned dependency; ordinary calculation is unchanged.
 See the [formulation, examples, compatibility and limitations](docs/OPTIMISATION.md).
 
+Add `--summary` to print the largest portion changes, remaining soft target gaps,
+and shopping changes alongside the full JSON report. Check the
+[food-data audit register](docs/DATA_AUDIT.md) before interpreting proposals:
+product names alone do not verify nutrient values, serving units, or cooked weights.
+
 ## Requirements and Installation
 
 Requires Python 3.10 and [uv](https://docs.astral.sh/uv/). These commands target Ubuntu or WSL:
@@ -114,6 +119,9 @@ See [calculation notes](docs/CALCULATIONS.md) for formulas, schedule rules, and 
 ## Development Roadmap
 
 The calculator now compares targets and proposes practical portions. The next priorities are checking input quality and improving shopping estimates.
+
+The [data and shopping roadmap](https://github.com/ojops/meal-plan-calc/issues/6)
+sets completion criteria for label verification, yields, packs, stock, and later cost modelling.
 
 ### Planned
 

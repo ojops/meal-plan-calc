@@ -251,8 +251,9 @@ def test_exclusion_cannot_override_a_hard_food_minimum(problem):
     assert result["proposed_meals"] is None
 
 
+@pytest.mark.parametrize("summary", [False, True])
 def test_macro_cli_uses_alias_exports_safely_and_preserves_every_input(
-    problem, tmp_path
+    problem, tmp_path, capsys, summary
 ):
     import json
 
@@ -267,7 +268,19 @@ def test_macro_cli_uses_alias_exports_safely_and_preserves_every_input(
         args.extend(["--" + name, str(path)])
     snapshots = {p: p.read_bytes() for p in tmp_path.iterdir()}
     report, export = tmp_path / "report.json", tmp_path / "proposed.json"
-    assert main(args + ["--output", str(report), "--export-meals", str(export)]) == 0
+    summary_args = ["--summary"] if summary else []
+    assert (
+        main(
+            args
+            + ["--output", str(report), "--export-meals", str(export)]
+            + summary_args
+        )
+        == 0
+    )
+    output = capsys.readouterr().out
+    assert ("Largest source-portion changes" in output) == summary
+    assert ("Target-range deviation:" in output) == (not summary)
+    assert ("Portion-change objective (normalised):" in output) == summary
     assert all(p.read_bytes() == original for p, original in snapshots.items())
     saved = report.read_bytes(), export.read_bytes()
     for destination in snapshots:
@@ -282,7 +295,7 @@ def test_macro_cli_uses_alias_exports_safely_and_preserves_every_input(
     assert (report.read_bytes(), export.read_bytes()) == saved
 
 
-def test_infeasible_cli_writes_diagnostic_but_no_meals(problem, tmp_path):
+def test_infeasible_cli_writes_diagnostic_but_no_meals(problem, tmp_path, capsys):
     import json
 
     from meal_plan_calc.optimise import main
@@ -297,7 +310,13 @@ def test_infeasible_cli_writes_diagnostic_but_no_meals(problem, tmp_path):
         path.write_text(json.dumps(data))
         args.extend(["--" + name, str(path)])
     report, export = tmp_path / "diagnostic.json", tmp_path / "not-written.json"
-    assert main(args + ["--output", str(report), "--export-meals", str(export)]) == 1
+    assert (
+        main(
+            args + ["--output", str(report), "--export-meals", str(export), "--summary"]
+        )
+        == 1
+    )
+    assert "No accepted meal plan" in capsys.readouterr().out
     assert json.loads(report.read_text())["status"] == "infeasible"
     assert not export.exists()
 

@@ -14,7 +14,7 @@ cp -n data/portion-rules.example.json portions.local.json
 # Edit both files before treating the proposal as your own plan.
 uv run --extra optimise python -m meal_plan_calc.optimise \
   --profile profile.local.json --portion-rules portions.local.json \
-  --output proposals/report.json --export-meals proposals/meals.json
+  --output proposals/report.json --export-meals proposals/meals.json --summary
 uv run meal-plan-calc --meals proposals/meals.json --report nutrition
 uv run meal-plan-calc --meals proposals/meals.json --report shopping --shopping-basis eaten
 uv run meal-plan-calc --meals proposals/meals.json --report shopping --shopping-basis prepared
@@ -27,6 +27,20 @@ still records solver outcomes when a solve stops without an accepted plan.
 Personal `*.local.json` files and `proposals/` are Git-ignored. The copy commands
 also preserve existing local files; choose a fresh filename if yours uses the
 older profile format.
+
+`--summary` replaces the brief terminal output with a readable summary of both
+objectives, without changing the saved proposal or JSON schema. It shows up to
+five entries per section: largest source-portion changes,
+remaining soft target gaps ranked by proportional deviation, and prepared/eaten
+shopping changes over one complete repeating cycle. Source portions are batch or
+shared-meal quantities, not necessarily a single day's consumption. Target gaps
+retain kcal/gram units, and shopping retains each food's recorded state. Tiny gaps
+use scientific notation rather than displaying an out-of-range value as zero.
+The JSON retains every entry and full precision. Failed solves show their reason
+and guidance, with no accepted plan. An optimum can still leave soft targets unmet.
+
+The [data audit](DATA_AUDIT.md) records unresolved source and unit checks before
+the example can be treated as a verified personal plan.
 
 `--foods`, `--meals` and `--schedule` use the existing formats. Use the same custom
 schedule for subsequent reporting. `electrolytes_days` remains the explicit
