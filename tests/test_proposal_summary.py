@@ -30,6 +30,7 @@ def test_summary_retains_small_gaps_and_ranks_different_units_proportionally():
         "status": "optimal",
         "baseline_primary_objective_value": D(1),
         "primary_objective_value": D("0.2"),
+        "objective_value": D("1.2345"),
         "changes": [
             {
                 "source": "batch",
@@ -87,6 +88,7 @@ def test_summary_retains_small_gaps_and_ranks_different_units_proportionally():
     assert "target at most 80.00 g" in text
     assert "target 1900.00 to 2100.00 kcal" in text
     assert "Remaining soft target gaps: 3" in text
+    assert "Portion-change objective (normalised): 1.23" in text
     assert (
         "rice [cooked]" in text
         and "prepared, full cycle" in text

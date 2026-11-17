@@ -28,8 +28,9 @@ Personal `*.local.json` files and `proposals/` are Git-ignored. The copy command
 also preserve existing local files; choose a fresh filename if yours uses the
 older profile format.
 
-`--summary` adds a terminal summary without changing the saved proposal or JSON
-schema. It shows up to five entries per section: largest source-portion changes,
+`--summary` replaces the brief terminal output with a readable summary of both
+objectives, without changing the saved proposal or JSON schema. It shows up to
+five entries per section: largest source-portion changes,
 remaining soft target gaps ranked by proportional deviation, and prepared/eaten
 shopping changes over one complete repeating cycle. Source portions are batch or
 shared-meal quantities, not necessarily a single day's consumption. Target gaps

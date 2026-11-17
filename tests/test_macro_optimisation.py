@@ -251,8 +251,9 @@ def test_exclusion_cannot_override_a_hard_food_minimum(problem):
     assert result["proposed_meals"] is None
 
 
+@pytest.mark.parametrize("summary", [False, True])
 def test_macro_cli_uses_alias_exports_safely_and_preserves_every_input(
-    problem, tmp_path, capsys
+    problem, tmp_path, capsys, summary
 ):
     import json
 
@@ -267,13 +268,19 @@ def test_macro_cli_uses_alias_exports_safely_and_preserves_every_input(
         args.extend(["--" + name, str(path)])
     snapshots = {p: p.read_bytes() for p in tmp_path.iterdir()}
     report, export = tmp_path / "report.json", tmp_path / "proposed.json"
+    summary_args = ["--summary"] if summary else []
     assert (
         main(
-            args + ["--output", str(report), "--export-meals", str(export), "--summary"]
+            args
+            + ["--output", str(report), "--export-meals", str(export)]
+            + summary_args
         )
         == 0
     )
-    assert "Largest source-portion changes" in capsys.readouterr().out
+    output = capsys.readouterr().out
+    assert ("Largest source-portion changes" in output) == summary
+    assert ("Target-range deviation:" in output) == (not summary)
+    assert ("Portion-change objective (normalised):" in output) == summary
     assert all(p.read_bytes() == original for p, original in snapshots.items())
     saved = report.read_bytes(), export.read_bytes()
     for destination in snapshots:

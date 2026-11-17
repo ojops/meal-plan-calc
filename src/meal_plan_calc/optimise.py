@@ -97,14 +97,14 @@ def main(argv=None):
                 json.dump(value, handle, indent=2, default=str, allow_nan=False)
                 handle.write("\n")
         print(f"{report['status']}: {args.output}")
-        if report["status"] == "optimal":
+        if args.summary:
+            print(proposal_summary(report))
+        elif report["status"] == "optimal":
             print(
                 f"Target-range deviation: {report['primary_objective_value']}; baseline change: {report['objective_value']}"
             )
             if report["primary_objective_value"] > 0.000001:
                 print("Some soft target ranges remain unmet; inspect the report.")
-        if args.summary:
-            print(proposal_summary(report))
         return 0 if report["status"] == "optimal" else 1
     except ImportError:
         parser.error(

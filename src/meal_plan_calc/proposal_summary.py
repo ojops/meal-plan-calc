@@ -3,14 +3,15 @@
 from decimal import Decimal
 
 
-def number(value, *, signed=False):
+def number(value, *, signed=False) -> str:
+    """Round for display while keeping small nonzero values visible."""
     value = Decimal(str(value))
     if value and abs(value) < Decimal("0.01"):
         return format(value, "+.2E" if signed else ".2E")
     return format(value, "+.2f" if signed else ".2f")
 
 
-def proposal_summary(report, *, limit=5):
+def proposal_summary(report, *, limit=5) -> str:
     """Summarise the in-memory report or its saved JSON equivalent."""
     if type(limit) is not int or limit < 1:
         raise ValueError("Summary limit must be a positive integer")
@@ -27,6 +28,7 @@ def proposal_summary(report, *, limit=5):
         "Target-range deviation (sum of normalised gaps): "
         f"{number(report['baseline_primary_objective_value'])} -> "
         f"{number(report['primary_objective_value'])}",
+        f"Portion-change objective (normalised): {number(report['objective_value'])}",
         "Largest source-portion changes (prepared batch or shared meal grams):",
     ]
 
@@ -60,13 +62,12 @@ def proposal_summary(report, *, limit=5):
             unit = "kcal" if nutrient == "calories" else "g"
             centre = Decimal(str(target["value"]))
             tolerance = Decimal(str(target["tolerance"]))
-            bounds = (
-                f"{number(centre - tolerance)} to {number(centre + tolerance)}"
-                if target["mode"] == "aim"
-                else f"at least {number(centre - tolerance)}"
-                if target["mode"] == "minimum"
-                else f"at most {number(centre + tolerance)}"
-            )
+            if target["mode"] == "aim":
+                bounds = f"{number(centre - tolerance)} to {number(centre + tolerance)}"
+            elif target["mode"] == "minimum":
+                bounds = f"at least {number(centre - tolerance)}"
+            else:
+                bounds = f"at most {number(centre + tolerance)}"
             gaps.append(
                 (
                     relative,
