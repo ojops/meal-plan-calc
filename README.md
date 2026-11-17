@@ -118,16 +118,18 @@ See [calculation notes](docs/CALCULATIONS.md) for formulas, schedule rules, and 
 
 ## Development Roadmap
 
-The calculator now compares targets and proposes practical portions. The next priorities are checking input quality and improving shopping estimates.
-
-The [data and shopping roadmap](https://github.com/ojops/meal-plan-calc/issues/6)
-sets completion criteria for label verification, yields, packs, stock, and later cost modelling.
+The calculator now compares targets, proposes practical portions, and summarises the results. The next priorities are checking input quality and improving shopping estimates.
 
 ### Planned
 
-- **Validate inputs:** audit nutrient sources, raw versus cooked weights, and supplement units before interpreting target comparisons as a dietary assessment.
-- **Review proposed plans:** compare target fit, portion sizes, and shopping changes using the optimiser. Check whether the configured assumptions suit the intended use.
-- **Improve shopping accuracy:** add optional cooking-yield and purchase-pack conversions while keeping prepared and eaten quantities distinct.
+- **Verify food records:** complete the [food-data audit](docs/DATA_AUDIT.md), recording label sources, dates checked, nutrient bases, preparation states, and serving masses. Prioritise supplement quantities, liquid units, raw/cooked weights, and the example egg conversion. Keep unresolved values marked as unverified and explain how corrections affect the reports.
+- **Review proposed plans:** compare target fit, portion sizes, remaining soft target gaps, and shopping changes using the optimiser. Check whether the configured assumptions suit the intended use.
+- **Improve shopping accuracy:** add optional cooking-yield, edible/drained-weight, and purchase-pack conversions. Distinguish consumed, prepared, and purchased quantities, show pack leftovers, and verify the conversions with hand-worked examples.
+- **Track stock and leftovers:** model starting stock and previous batches explicitly, including starting a plan without carryover. Check both a complete cycle and shorter periods where purchasing differs from consumption.
+- **Compare costs:** once purchasing quantities are reliable, add dated pack prices and compare cost, target fit, and changes from the existing plan.
+- **Simplify input:** consider a small configuration form once the data format and calculations are stable.
+
+The audit register is prepared, but label verification is still pending. Complete one step with a worked example and checked results before extending the model further.
 
 ## Project Structure
 
