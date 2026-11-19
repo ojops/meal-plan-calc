@@ -1,57 +1,61 @@
 # Portfolio video: reproduction and verification
 
-The README embeds an **eight-second looping GIF** (`docs/media/preview.gif`) linked to the complete **36-second, silent 1080p MP4** (`docs/media/demo.mp4`).
-
-The recording is a historical meal-plan snapshot. It predates the cooked-state
-correction for quinoa and grains, and includes 6 g of powder on every run day.
-Current demo generation reads the current food and meal files with no optional
-powder selected. Run-day salt is therefore 0.78 g lower, with corresponding changes
-to the other powder nutrients. Regenerated results and input hashes need not match
-the recording. Targets and contribution reports are CLI features outside the film.
+The eight-second README preview shows daily nutrition for the supplied week. The 1 minute 29 second silent MP4 follows those ingredients from a food record to a shopping list, then shows how the optional optimiser proposes a week of practical portions. The MP4 includes chapter markers. The table below is a text companion.
 
 ## Generate
 
-From the repository root, with Python 3.10 and [uv](https://docs.astral.sh/uv/):
+From the repository root, use Python 3.10, uv, FFmpeg with H.264 support, and DejaVu fonts. On Ubuntu the system packages are `ffmpeg` and `fonts-dejavu-core`. Rendering uses Pillow and the pinned SciPy optimiser on the CPU.
 
 ```bash
-uv sync --locked --extra demo
-uv run --locked --extra demo python scripts/render_demo.py
+uv sync --locked --extra demo --extra optimise
+uv run --locked --extra demo --extra optimise python scripts/render_demo.py
 ```
 
-Install FFmpeg with H.264 support and DejaVu fonts (Ubuntu: `ffmpeg`, `fonts-dejavu-core`). The optional `demo` extra installs Pillow. Normal calculations do not require it. Rendering is CPU-based and needs no graphics display or external data.
-
-Use `--output-dir /path/to/output` for another destination. To inspect chapter layouts without video encoding:
+The renderer writes `demo.mp4`, `preview.gif`, and `demo-data.json` to `docs/media/`. To inspect one still per chapter in a different directory, run
 
 ```bash
-uv run --locked --extra demo python scripts/render_demo.py --stills-only --output-dir /tmp/meal-demo-stills
+uv run --locked --extra demo --extra optimise python scripts/render_demo.py --stills-only --output-dir /tmp/meal-demo-stills
 ```
 
 ## What the film demonstrates
 
-| Time | Content |
+| Time | Follow the example |
 | --- | --- |
-| 0–8 s | Daily nutrient totals and one breakfast ingredient's contribution |
-| 8–17 s | Allocation of a prepared carbohydrate batch to later meals |
-| 17–26 s | Change one breakfast quantity by 25 g in a copy of the plan |
-| 26–36 s | Compare 3-, 7-, and 14-day prepared/eaten shopping quantities |
+| 0:00–0:08 | **Daily intake.** Food labels give values per 100 g. At 374 kcal per 100 g, 75 g of oats supplies 280.50 kcal. The full Monday adds up to 2,399.67 kcal and 136.79 g of protein. |
+| 0:08–0:17 | **Batch meals.** Monday’s 161 g of rice supplies 120.75 g to Tuesday lunch and 40.25 g to Wednesday dinner. Its calories follow the same split. |
+| 0:17–0:26 | **Edit a meal.** In a copy of the plan, change breakfast oats from 75 g to 100 g. Monday gains 93.50 kcal, and the same breakfast recurs each day. |
+| 0:26–0:37 | **Shopping.** From Monday to Wednesday the plan prepares 271 g of rice and eats 269.75 g, including portions from earlier batches. Both totals reach 613 g over the full weekly cycle. |
+| 0:37–0:50 | **Targets.** Monday meets the example 120 g protein minimum. Its largest contribution is 22.69 g of protein from the salmon cooked in Sunday’s batch and eaten at Monday lunch. |
+| 0:50–1:01 | **Optional powder.** Tuesday’s default includes the run-day tablet. Selecting Tuesday adds 6 g of powder and takes daily salt from 3.33 g to 4.11 g. |
+| 1:01–1:14 | **Portion rules.** The example strength day has a total budget of 2,400 kcal. The solver can move oats in 5 g steps, omit optional oil, and count eggs in whole units using the example conversion. |
+| 1:14–1:29 | **Proposal.** First minimise gaps outside the preferred ranges, then minimise portion changes at that fit. The sum of normalised gaps falls from 2.20 to 0.38. Thirteen daily soft targets still fall outside their ranges. Weekly prepared oats increase from 525 g to 1,050 g. |
 
-`meal_plan_calc.demo_data.build_demo()` loads and validates the current data and calls the production nutrition and shopping functions. The scenario is calculated from a deep copy without modifying the input files. It uses oats and Monday's rice when present, or other suitable ingredients otherwise.
+Try the target and contribution chapter with the supplied data.
 
-The recorder retains full-precision `Decimal` values (as strings) and SHA-256 checksums in `docs/media/demo-data.json`. Floating point is used only for plotting. Displayed values are rounded. The renderer does not implement a separate nutrition engine or an optimisation algorithm.
+```bash
+uv run meal-plan-calc --days 1 --report targets --targets data/targets.example.json --contributors protein
+```
 
-See [calculation notes](CALCULATIONS.md) for batch allocation, shopping bases, units, and input-data limitations.
+To reproduce the final chapter, use the supplied example files and fresh output paths. The summary identifies the largest portion changes, remaining soft gaps, and shopping changes. The export can be read by the usual reporting commands.
+
+```bash
+uv run --extra optimise python -m meal_plan_calc.optimise \
+  --profile data/profile.macros.example.json --portion-rules data/portion-rules.example.json \
+  --summary --output proposals/demo-report.json --export-meals proposals/demo-meals.json
+uv run meal-plan-calc --meals proposals/demo-meals.json --days 1 --report nutrition
+```
+
+`scripts/demo_reports.py` extends the original `build_demo()` recording with production target comparisons, contribution records, a selected-day powder calculation, and a real two-stage optimiser run. The recording includes input SHA-256 checksums, exact decimal quantities, solver status, and the CLI summary. The breakfast edit uses a copy. All amounts use the food’s recorded raw or cooked state. The body weight, nutrient targets, and egg mass are illustrative. [Calculation notes](CALCULATIONS.md) · [Optimiser and portion rules](OPTIMISATION.md) · [Food-data audit](DATA_AUDIT.md)
 
 ## Validate
 
 ```bash
-uv run --locked pytest
+uv run --locked --extra optimise pytest
 uv run --locked ruff check .
 uv run --locked ruff format --check .
-uv run --locked --extra demo python scripts/render_demo.py --stills-only --output-dir /tmp/meal-demo-stills
+ffprobe -v error -show_chapters docs/media/demo.mp4
 ffmpeg -v error -i docs/media/demo.mp4 -f null -
 ffmpeg -v error -i docs/media/preview.gif -f null -
 ```
 
-Tests cover changed ingredients, quantities, and nutrient values, plus input isolation, shopping conservation, and CLI agreement. The still-frame command checks rendering without generating a new MP4.
-
-**When updating the media:** regenerate and commit the MP4, GIF, and data recording together. The README's MP4 link is pinned to a media commit. Update it when the MP4 changes. Media bytes may vary with FFmpeg and font versions.
+When replacing the media, commit the MP4, GIF, and JSON together. Pin both README video links to that media commit. Encoded bytes can vary with FFmpeg and font versions.

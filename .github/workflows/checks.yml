@@ -15,4 +15,4 @@ jobs:
       - run: uv run --locked ruff check .
       - run: uv run --locked ruff format --check .
       - run: uv run --locked --extra optimise pytest
-      - run: uv run --locked --extra demo python scripts/render_demo.py --stills-only --output-dir /tmp/meal-demo-stills
+      - run: uv run --locked --extra demo --extra optimise python scripts/render_demo.py --stills-only --output-dir /tmp/meal-demo-stills

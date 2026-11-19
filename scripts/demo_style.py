@@ -3,6 +3,7 @@
 import json
 import shutil
 import subprocess
+import tempfile
 from functools import lru_cache
 from pathlib import Path
 
@@ -77,13 +78,16 @@ def base(project, number, title, subtitle, chapters, t, duration, accent, note):
     text(draw, (80, 94), title, 54, bold=True)
     text(draw, (80, 170), subtitle, 27, MUTED)
     draw.line((80, 215, 1840, 215), fill=GRID, width=2)
+    gap = 20
+    step = (WIDTH - 160 + gap) / len(chapters)
     for i, (start, caption) in enumerate(chapters):
         end = chapters[i + 1][0] if i + 1 < len(chapters) else duration
-        x = 80 + i * 446
-        draw.line((x, 958, x + 420, 958), fill=GRID, width=4)
+        x = 80 + i * step
+        segment = step - gap
+        draw.line((x, 958, x + segment, 958), fill=GRID, width=4)
         if t >= start:
             amount = min(1, (t - start) / (end - start))
-            draw.line((x, 958, x + 420 * amount, 958), fill=accent, width=4)
+            draw.line((x, 958, x + segment * amount, 958), fill=accent, width=4)
         text(
             draw,
             (x, 977),
@@ -141,50 +145,73 @@ def save_data(path: Path, data: dict) -> None:
     path.write_text(json.dumps(data, indent=2, default=str, allow_nan=False) + "\n")
 
 
-def encode(frame, output: Path, duration: int) -> None:
+def encode(frame, output: Path, duration: int, chapters=()) -> None:
     """Stream full-HD RGB frames to an H.264 MP4 without intermediate images."""
     if shutil.which("ffmpeg") is None:
         raise RuntimeError("Install FFmpeg with the libx264 encoder")
-    command = [
-        "ffmpeg",
-        "-v",
-        "error",
-        "-y",
-        "-f",
-        "rawvideo",
-        "-pix_fmt",
-        "rgb24",
-        "-s",
-        f"{WIDTH}x{HEIGHT}",
-        "-r",
-        str(FPS),
-        "-i",
-        "-",
-        "-an",
-        "-c:v",
-        "libx264",
-        "-crf",
-        "21",
-        "-preset",
-        "medium",
-        "-threads",
-        "2",
-        "-pix_fmt",
-        "yuv420p",
-        "-movflags",
-        "+faststart",
-        str(output),
-    ]
-    with subprocess.Popen(command, stdin=subprocess.PIPE) as process:
-        try:
-            for index in range(duration * FPS):
-                process.stdin.write(frame(index / FPS).tobytes())
-                if index % (FPS * 6) == 0:
-                    print(f"Rendered {index // FPS}/{duration} seconds", flush=True)
-        finally:
-            process.stdin.close()
-        if process.wait() != 0:
-            raise RuntimeError("FFmpeg encoding failed")
+    with tempfile.TemporaryDirectory() as temporary:
+        metadata = Path(temporary) / "chapters.txt"
+        lines = [";FFMETADATA1"]
+        for index, (start, title) in enumerate(chapters):
+            end = chapters[index + 1][0] if index + 1 < len(chapters) else duration
+            lines.extend(
+                (
+                    "[CHAPTER]",
+                    "TIMEBASE=1/1",
+                    f"START={start}",
+                    f"END={end}",
+                    f"title={title}",
+                )
+            )
+        metadata.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        command = [
+            "ffmpeg",
+            "-v",
+            "error",
+            "-y",
+            "-f",
+            "rawvideo",
+            "-pix_fmt",
+            "rgb24",
+            "-s",
+            f"{WIDTH}x{HEIGHT}",
+            "-r",
+            str(FPS),
+            "-i",
+            "-",
+            "-f",
+            "ffmetadata",
+            "-i",
+            str(metadata),
+            "-map",
+            "0:v:0",
+            "-map_chapters",
+            "1",
+            "-an",
+            "-c:v",
+            "libx264",
+            "-crf",
+            "21",
+            "-preset",
+            "medium",
+            "-threads",
+            "2",
+            "-pix_fmt",
+            "yuv420p",
+            "-movflags",
+            "+faststart",
+            str(output),
+        ]
+        with subprocess.Popen(command, stdin=subprocess.PIPE) as process:
+            try:
+                for index in range(duration * FPS):
+                    process.stdin.write(frame(index / FPS).tobytes())
+                    if index % (FPS * 6) == 0:
+                        print(f"Rendered {index // FPS}/{duration} seconds", flush=True)
+            finally:
+                process.stdin.close()
+            if process.wait() != 0:
+                raise RuntimeError("FFmpeg encoding failed")
 
 
 def preview(video: Path, output: Path, start: float, duration: float) -> None:
