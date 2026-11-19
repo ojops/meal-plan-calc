@@ -2,15 +2,15 @@
 
 A Python command-line project for calculating daily nutrition and shopping quantities from a configurable, repeating meal plan.
 
-[![Eight-second preview of calculated daily nutrition](docs/media/preview.gif)](https://raw.githubusercontent.com/ojops/meal-plan-calc/45d36fb767beec954759e319df599bb409524fab/docs/media/demo.mp4)
+[![A week of daily calorie totals and the ingredients behind Monday’s results](docs/media/preview.gif)](https://raw.githubusercontent.com/ojops/meal-plan-calc/0b067fea691a0ace47770a197e8d5b243bede41c/docs/media/demo.mp4)
 
-*Preview: historical meal-plan snapshot, including the formerly automatic electrolyte powder. [Watch the full 36-second demonstration (MP4)](https://raw.githubusercontent.com/ojops/meal-plan-calc/45d36fb767beec954759e319df599bb409524fab/docs/media/demo.mp4) · [How the video is made](docs/DEMO.md).*
+*Watch the [1:29 meal-plan walkthrough (MP4)](https://raw.githubusercontent.com/ojops/meal-plan-calc/0b067fea691a0ace47770a197e8d5b243bede41c/docs/media/demo.mp4). Follow a batch from the kitchen to the shopping list, check a day against its targets, and inspect an optimiser proposal. [Chapters and reproduction](docs/DEMO.md).*
 
 ## Overview
 
 Use a repeating meal plan to calculate daily nutrients and shopping quantities. JSON files define foods, meals, and exercise schedules. Batch allocation accounts for food prepared on one day and eaten later.
 
-Optional targets compare intake with exercise-specific goals. Contribution reports show which ingredients supply each nutrient.
+Optional targets compare intake with exercise-specific goals. Contribution reports show which ingredients supply each nutrient. The optional optimiser proposes portion changes and shows their effect on the week’s targets and shopping list.
 
 ## Features
 
@@ -35,7 +35,9 @@ uv sync --locked --extra optimise
 cp -n data/profile.macros.example.json profile.local.json
 cp -n data/portion-rules.example.json portions.local.json
 # Edit the local files before running the optimiser.
-uv run --extra optimise python -m meal_plan_calc.optimise --profile profile.local.json --portion-rules portions.local.json --output proposals/report.json --export-meals proposals/meals.json
+uv run --extra optimise python -m meal_plan_calc.optimise \
+  --profile profile.local.json --portion-rules portions.local.json \
+  --summary --output proposals/report.json --export-meals proposals/meals.json
 ```
 
 Edit the local copies: supplied body data, coefficients, and unit conversions are
@@ -46,8 +48,9 @@ nutritional adequacy. Existing profiles and `--preferences` commands still work.
 SciPy/HiGHS remains an optional pinned dependency; ordinary calculation is unchanged.
 See the [formulation, examples, compatibility and limitations](docs/OPTIMISATION.md).
 
-Add `--summary` to print the largest portion changes, remaining soft target gaps,
-and shopping changes alongside the full JSON report. Check the
+The `--summary` output lists the largest portion changes, remaining soft target gaps,
+and shopping changes. To inspect an exported plan, pass `--meals proposals/meals.json`
+to the usual reporting commands. Check the
 [food-data audit register](docs/DATA_AUDIT.md) before interpreting proposals:
 product names alone do not verify nutrient values, serving units, or cooked weights.
 
@@ -62,6 +65,16 @@ uv sync --locked
 ```
 
 ## Usage
+
+Start with one day of the bundled plan and trace its protein back to the ingredients.
+
+```bash
+uv run meal-plan-calc --days 1 --report nutrition --contributors protein
+```
+
+Monday totals **2,399.67 kcal** and **136.79 g of protein**. The largest single protein contribution is **22.69 g** from the salmon prepared on Sunday and eaten at Monday lunch.
+
+For a full week or a shopping period of your choice, run
 
 ```bash
 uv run meal-plan-calc
@@ -136,13 +149,16 @@ The audit register is prepared, but label verification is still pending. Complet
 ```text
 meal-plan-calc/
 ├── data/
-│   ├── foods.json            # Ingredient nutrient records
-│   ├── meals.json            # Meals and quantities
-│   └── targets.example.json  # Illustrative user targets, optional
+│   ├── foods.json                  # Ingredient nutrient records
+│   ├── meals.json                  # Meals and quantities
+│   ├── targets.example.json        # Illustrative goals for reports
+│   ├── profile.macros.example.json # Weight, daily budgets, and macro ranges
+│   └── portion-rules.example.json  # Adjustable foods, limits, and portions
 ├── src/meal_plan_calc/
 │   ├── nutrition.py          # Nutrient calculations
 │   ├── planning.py           # Repeating schedule and allocations
 │   ├── targets.py            # Target configuration and comparisons
+│   ├── optimise.py           # Optimiser CLI, summary, and plan export
 │   ├── optimisation.py       # Targets, portion constraints, and proposal reports
 │   ├── portion_solver.py     # Two-stage mixed-integer solver
 │   ├── macro_profile.py      # Calorie budgets and macro assumptions
