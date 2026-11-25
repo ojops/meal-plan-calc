@@ -84,6 +84,8 @@ uv run meal-plan-calc --start-day monday --days 3 --report shopping
 uv run meal-plan-calc --start-day thursday --days 4 --report shopping
 ```
 
+Day names in `--start-day` and `--sweaty` accept mixed case. If a custom schedule has names that differ only in case, use the exact spelling.
+
 By default, the program reports daily nutrition and a week of **prepared** shopping. Add `--shopping-basis eaten` to count ingredients consumed, including portions cooked on earlier days.
 
 Edit `data/foods.json` and `data/meals.json`, or use `--foods`, `--meals`, and `--schedule` for custom files. See `uv run meal-plan-calc --help` for all options.
