@@ -60,6 +60,20 @@ def print_contributors(entries: list[dict], nutrient: str, total: Decimal) -> No
         )
 
 
+def resolve_day(name: str, days: list[str]) -> str:
+    """Match a CLI day to its exact spelling in the active schedule."""
+    if name in days:
+        return name
+    matches = [day for day in days if day.casefold() == name.casefold()]
+    if len(matches) == 1:
+        return matches[0]
+    if matches:
+        raise ValueError(
+            f"Ambiguous day {name!r}. Choose an exact spelling from {', '.join(matches)}"
+        )
+    raise ValueError(f"Unknown day {name!r}. Choose from {', '.join(days)}")
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--foods", type=Path, default=DATA_DIR / "foods.json")
@@ -141,13 +155,13 @@ def main(argv=None) -> int:
                 raise ValueError(f"Missing meal {name}")
         if args.days <= 0:
             raise ValueError("--days must be positive")
-        start = days.index(args.start_day or days[0])
+        start = days.index(resolve_day(args.start_day or days[0], days))
         selected = [days[(start + i) % len(days)] for i in range(args.days)]
         electrolytes_days = schedule.get("electrolytes_days", [])
         if args.no_extra_electrolytes:
             electrolytes_days = []
         elif args.sweaty is not None:
-            electrolytes_days = args.sweaty
+            electrolytes_days = [resolve_day(day, days) for day in args.sweaty]
         if not isinstance(electrolytes_days, list) or any(
             not isinstance(day, str) or day not in days for day in electrolytes_days
         ):

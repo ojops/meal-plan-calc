@@ -4,7 +4,7 @@ from decimal import Decimal
 import pytest
 
 from meal_plan_calc import nutrition, shopping
-from meal_plan_calc.main import DATA_DIR, main
+from meal_plan_calc.main import DATA_DIR, main, resolve_day
 from meal_plan_calc.planning import CATEGORIES_SPLIT, DAYS, EXERCISE_SPLIT
 from meal_plan_calc.validation import load_json, validate_data
 
@@ -107,3 +107,13 @@ def test_fortnight_cli_and_custom_schedule(tmp_path, capsys):
     )
     output = capsys.readouterr().out
     assert "14 days, prepared" in output and "oats: 1050 g" in output
+
+
+def test_custom_day_choices_and_ambiguous_spelling():
+    days = ["Ride", "ride"]
+    for name in days:
+        assert resolve_day(name, days) == name
+    for name, message in [("RIDE", "Ambiguous day"), ("rest", "Unknown day")]:
+        with pytest.raises(ValueError, match=message) as error:
+            resolve_day(name, days)
+        assert all(day in str(error.value) for day in days)

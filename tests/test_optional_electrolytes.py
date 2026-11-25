@@ -167,3 +167,11 @@ def test_missing_optional_meal_only_required_when_selected(tmp_path, capsys):
         main(["--meals", str(path), "--sweaty", "tuesday"])
     assert error.value.code == 2
     assert "require an extra_electrolytes meal" in capsys.readouterr().err
+
+
+def test_cli_day_options_accept_mixed_case(capsys):
+    args = ["--days", "1", "--report", "nutrition"]
+    assert main([*args, "--start-day", "tuesday", "--sweaty", "tuesday"]) == 0
+    expected = capsys.readouterr().out
+    assert main([*args, "--start-day", "Tuesday", "--sweaty", "TUESDAY"]) == 0
+    assert capsys.readouterr().out == expected
